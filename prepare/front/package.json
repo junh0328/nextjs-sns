@@ -1,0 +1,16 @@
+{
+  "name": "react-nodebird-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next"
+  },
+  "author": "Junhee Lee",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^9.5.5",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}
