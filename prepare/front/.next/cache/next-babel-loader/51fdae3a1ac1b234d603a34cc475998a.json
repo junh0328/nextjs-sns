@@ -1,1 +1,0 @@
-{"ast":null,"code":"export { default } from \"next/error\";","map":{"version":3,"sources":["/Users/leejunhee/Documents/zeroCho/nextjs-sns/prepare/front/pages/_error.js"],"names":["default"],"mappings":"AAAA,SAASA,OAAT,QAAwB,YAAxB","sourcesContent":["export { default } from \"next/error\";\n"]},"metadata":{},"sourceType":"module"}

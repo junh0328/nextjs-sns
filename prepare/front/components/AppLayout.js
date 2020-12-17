@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Link from "next/Link";
-import { Menu } from "antd";
-import "antd/dist/antd.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Link from 'next/Link';
+import { Menu } from 'antd';
+import 'antd/dist/antd.css';
 
 const AppLayout = ({ children }) => {
   return (
