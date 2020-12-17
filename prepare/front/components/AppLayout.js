@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/Link';
-import { Menu } from 'antd';
+import { Menu, Input, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
+import stled from 'styled-components';
+
+import UserProfile from '../components/UserProfile';
+import LoginForm from '../components/LoginForm';
+
+const SearchInput = stled(Input.Search)`
+  vertical-align: middle;
+`;
 
 const AppLayout = ({ children }) => {
+  const [isloggedIn, setIsLoggedIn] = useState(false);
   return (
     <div>
       <Menu mode="horizontal">
@@ -19,12 +28,33 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item>
+          <SearchInput enterButton />
+        </Menu.Item>
+        <Menu.Item>
           <Link href="/signup">
             <a>회원가입</a>
           </Link>
         </Menu.Item>
       </Menu>
-      {children}
+      <Row gutter={8}>
+        {/* gutter: 컬럼 사이의 간격 */}
+        {/* n/24라고 생각하기 24가 100% 이므로 md 6 은 25% */}
+        <Col xs={24} md={6}>
+          {isloggedIn ? <UserProfile /> : <LoginForm />}
+        </Col>
+        <Col xs={24} md={12}>
+          {children}
+        </Col>
+        <Col xs={24} md={6}>
+          <a
+            href="https://github.com/junh0328"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Made by JunHee
+          </a>
+        </Col>
+      </Row>
     </div>
   );
 };
