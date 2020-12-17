@@ -1,24 +1,29 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Form, Button, Input } from 'antd';
+import PropTypes from 'prop-types';
 import Link from 'next/Link';
 import styled from 'styled-components';
+import useinput from '../hooks/useinput';
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
-const LoginForm = () => {
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
+const FormWrapper = styled(Form)`
+  padding: 10px;
+`;
 
-  const onChangeId = useCallback((e) => {
-    setId(e.target.value);
-  }, []);
-  const onChangePassword = useCallback((e) => {
-    setPassword(e.target.value);
-  }, []);
+const LoginForm = ({ setIsLoggedIn }) => {
+  const [id, onChangeId] = useinput('');
+  const [password, onChangePassword] = useinput('');
+
+  const onSubmitForm = useCallback(() => {
+    console.log(id, password);
+    setIsLoggedIn(true);
+  }, [id, password]);
 
   return (
-    <Form>
+    //   onFinish에는 자동으로 e.preventDefault()가 적용이 되있다.
+    <FormWrapper onFinish={onSubmitForm}>
       <div>
         <label htmlFor="user-id">아이디</label>
         <br />
@@ -51,8 +56,12 @@ const LoginForm = () => {
           </a>
         </Link>
       </ButtonWrapper>
-    </Form>
+    </FormWrapper>
   );
+};
+
+LoginForm.propTypes = {
+  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
