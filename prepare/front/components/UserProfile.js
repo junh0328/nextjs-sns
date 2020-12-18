@@ -10,6 +10,7 @@ const UserProfile = ({ setIsLoggedIn }) => {
     <Card
       actions={[
         <div key="twit">
+          {/* 트윗 수 */}
           짹짹
           <br />0
         </div>,

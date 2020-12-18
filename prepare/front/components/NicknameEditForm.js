@@ -1,3 +1,7 @@
+/*
+profile.js에서 사용되는 닉네임 수정 폼을 컴포넌트로 만듬
+*/
+
 import React, { useMemo } from 'react';
 import { Form, Input } from 'antd';
 

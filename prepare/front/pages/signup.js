@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
 import useinput from '../hooks/useinput';
-
+// 인라인 태그로 작성시에 리렌더링을 방지하기 위해 styled component로 사용
 const ErrorMessage = styled.div`
   color: red;
 `;
@@ -15,6 +15,7 @@ const Signup = () => {
   const [nickname, onChangeNickname] = useinput('');
   const [password, onChangePassword] = useinput('');
 
+  // 비밀번호 체크 및 에러
   const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const onChangPasswordCheck = useCallback(
@@ -24,7 +25,7 @@ const Signup = () => {
     },
     [password]
   );
-
+  // 약관 동의 상태 및 에러
   const [term, setTerm] = useState('');
   const [termError, setTermError] = useState(false);
   const onChangeTerm = useCallback((e) => {

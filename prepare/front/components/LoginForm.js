@@ -13,6 +13,7 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = ({ setIsLoggedIn }) => {
+  // 더미(가짜) 데이터로 그냥 아이디와 비밀번호가 넘어오는 상태를 관리한다.
   const [id, onChangeId] = useinput('');
   const [password, onChangePassword] = useinput('');
 
