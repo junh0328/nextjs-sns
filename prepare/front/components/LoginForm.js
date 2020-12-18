@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
-import { Form, Button, Input } from 'antd';
-import PropTypes from 'prop-types';
-import Link from 'next/Link';
-import styled from 'styled-components';
-import useinput from '../hooks/useinput';
+import React, { useCallback } from "react";
+import { Form, Button, Input } from "antd";
+import Link from "next/Link";
+import styled from "styled-components";
+import useinput from "../hooks/useinput";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../reducers";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -12,14 +13,15 @@ const FormWrapper = styled(Form)`
   padding: 10px;
 `;
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch();
   // 더미(가짜) 데이터로 그냥 아이디와 비밀번호가 넘어오는 상태를 관리한다.
-  const [id, onChangeId] = useinput('');
-  const [password, onChangePassword] = useinput('');
+  const [id, onChangeId] = useinput("");
+  const [password, onChangePassword] = useinput("");
 
   const onSubmitForm = useCallback(() => {
     console.log(id, password);
-    setIsLoggedIn(true);
+    dispatch(loginAction(id, password));
   }, [id, password]);
 
   return (
@@ -59,10 +61,6 @@ const LoginForm = ({ setIsLoggedIn }) => {
       </ButtonWrapper>
     </FormWrapper>
   );
-};
-
-LoginForm.propTypes = {
-  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

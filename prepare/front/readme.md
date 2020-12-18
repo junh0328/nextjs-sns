@@ -1,13 +1,14 @@
 # 1. Hello, Next.js
 
-- Next.js에서는 pages 폴더에 페이징 처리를 해줘야 하는데 next 라이브러리가 pages 폴더를 인식하여 코드 스플리팅을 해주기 때문이다.
-- Next가 react처럼 page안에 있는 페이지들을 라우팅 처리를 해주지 않아도 url창에 파라미터를 입력할 시 자동으로 페이징 처리를 해준다. ex) localhost:3000/profile >> 다이나믹 라우팅 기능
+- Next.js에서는 pages 폴더에 페이징 처리를 해줘야 하는데, Next.js의 라이브러리가 pages 폴더를 인식하여 코드 스플리팅을 해주기 때문이다.
+- Next가 react처럼 page안에 있는 페이지들을 라우팅 처리를 해주지 않아도 url창에 파라미터를 입력할 시 자동으로 페이징 처리를 해준다.
+- ex) localhost:3000/profile >> 다이나믹 라우팅 기능
 - Next.js에서는 react-router로 라우팅처리를 돕는 것이 아닌 자체적인 라우터를 활용한다. (page 안에 있는 파일들을 파라미터를 통해 자동으로 라우팅처리 해준다)
-- Link href="/경로" 후에 a태그로 감싸준다.
+- 코드 스플리팅을 하기 위해서 Link href="/경로" 후에 a태그로 감싸준다.
 
 # 2. antd 사용해 SNS 화면 만들기
 
-- next.js에는 기본적으로 웹팩이 제공되기 때문에 웹팩이 css파일을 스타일 태그로 바꿔서 적용해준다.
+- next.js에는 기본적으로 웹팩이 제공되는데, 이 웹팩이 css파일을 스타일 태그로 바꿔서 적용해준다.
 - 따라서 이번 프로젝트는 웹팩을 기반으로 antd와 styled-components를 사용하여 UI 구성한다.
 - 다음 프로젝트 진행 시, npm trends에서 검색하여 더 나은 CSS FRAMEWORK 사용하기!
 - antd에서는 class 컴포넌트로 작성이 되있기 때문에 함수형으로 바꾸는 공부 꼭 할 것!
@@ -21,6 +22,9 @@
 - yarn add redux / npm install redux로 모듈 다운로드
 - react-redux 사용이세 리액트-리덕스를 사용하기위해 provider 로 컴포넌트 전체를 감싸주었지만, next.js에서는 자동으로 감싸 주기 때문에 감싸 주지 않는다.
 - 우리가 Provider를 또 사용하면 Provider를 2번 사용하게 되는 중복이 발생한다.
+- next-redux-wrapper의 createWrapper 함수를 사용하여 스토어를 감싸준다.
+- 리덕스 기능을 사용하기 위해 createStore통해 스토어를 만들고 리듀서를 연결한다.
+
 - 리액트에서는 모든 파일들을 컴포넌트로 분리하여 관리를 하기 때문에 중앙 데이터 저장소가 필요하다.
 - why? 데이터의 일치성을 주기 위해
 - 이 중앙 데이터 저장소의 역할을 하는 것이 Context API, Redux, MobX 등이 있다.

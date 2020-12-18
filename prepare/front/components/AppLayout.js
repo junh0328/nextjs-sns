@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import Link from 'next/Link';
-import { Menu, Input, Row, Col } from 'antd';
-import 'antd/dist/antd.css';
-import stled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import Link from "next/Link";
+import { Menu, Input, Row, Col } from "antd";
+import "antd/dist/antd.css";
+import stled from "styled-components";
 
-import UserProfile from '../components/UserProfile';
-import LoginForm from '../components/LoginForm';
+import UserProfile from "../components/UserProfile";
+import LoginForm from "../components/LoginForm";
+
+import { useSelector } from "react-redux";
 
 const SearchInput = stled(Input.Search)`
   vertical-align: middle;
 `;
 
 const AppLayout = ({ children }) => {
-  const [isloggedIn, setIsLoggedIn] = useState(false);
+  const isloggedIn = useSelector((state) => state.user.isloggedIn);
+
   return (
     <div>
       <Menu mode="horizontal">
@@ -40,11 +43,7 @@ const AppLayout = ({ children }) => {
         {/* gutter: 컬럼 사이의 간격 */}
         {/* n/24라고 생각하기 24가 100% 이므로 md 6 은 25% */}
         <Col xs={24} md={6}>
-          {isloggedIn ? (
-            <UserProfile setIsLoggedIn={setIsLoggedIn} />
-          ) : (
-            <LoginForm setIsLoggedIn={setIsLoggedIn} />
-          )}
+          {isloggedIn ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}
