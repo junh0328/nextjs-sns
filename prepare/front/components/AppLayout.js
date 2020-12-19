@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import Link from "next/Link";
 import { Menu, Input, Row, Col } from "antd";
 import "antd/dist/antd.css";
-import stled from "styled-components";
+import styled from "styled-components";
 
 import UserProfile from "../components/UserProfile";
 import LoginForm from "../components/LoginForm";
 
 import { useSelector } from "react-redux";
 
-const SearchInput = stled(Input.Search)`
+const SearchInput = styled(Input.Search)`
   vertical-align: middle;
 `;
 

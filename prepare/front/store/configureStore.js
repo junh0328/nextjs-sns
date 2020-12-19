@@ -1,11 +1,18 @@
 import { createWrapper } from "next-redux-wrapper";
-import { createStore } from "redux";
+import { applyMiddleware, compose, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 import reducer from "../reducers";
 
 const configureStore = () => {
-  const store = createStore(reducer);
-  // store를 컴포넌트에서 가져다 쓰기 위해서는 디스패치를 시켜줘서(액션을 발생시켜서) 리듀서로 보내준다. 전달받은 리듀서에서 액션 타입에 따라 다음 상태로 만들어 준다.
+  const middlewares = [];
+  // redux의 기능을 확장한다는 의미로 enhancer라는 변수를 만들어주었다.
+  const enhancer =
+    process.env.NODE_ENV === "production"
+      ? compose(applyMiddleware(...middlewares)) // 배포용
+      : composeWithDevTools(applyMiddleware(...middlewares)); //개발용, devTools를 사용하여 히스토리 추적 및 분석 가능
+  const store = createStore(reducer, enhancer);
+
   return store;
 };
 
