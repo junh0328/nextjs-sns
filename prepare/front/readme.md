@@ -81,7 +81,7 @@
   const style = useMemo(()=> ({ marginTop: 10}). []);
   ```
 - why? 리렌더링 방지
-- useCallback() 함수를 캐싱 <-> useMemo() 값을 캐싱
+- 최상위 노드에서 개발을 시작할 때 의미가 있는 단위로 컴포넌트를 먼저 짠다음 코드를 만들어 나가는 것이 좋다.
 
 ## ※ 개념 정리(javascript /react /next)
 
