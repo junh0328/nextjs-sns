@@ -24,13 +24,13 @@ export const initialState = {
       Comments: [
         {
           User: {
-            nikcname: "nero",
+            nickname: "nero",
           },
           content: "어디서 사셨나요? 정보좀요!",
         },
         {
           User: {
-            nikcname: "zeroCho",
+            nickname: "zeroCho",
           },
           content: "잘 어울려요 찰떡!",
         },
