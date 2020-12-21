@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 
 const PostImages = ({ images }) => {
-  return <>구현중</>;
+  const [showImageZoom, setShowImageZoom] = useState(false);
+  const onZoom = useCallback(() => {
+    setShowImageZoom(true);
+  }, []);
+  if (images.length === 1) {
+    return (
+      <>
+        <img
+          role="presentation"
+          src={images[0].src}
+          alt={images[0].src}
+          onClick={onZoom}
+        />
+      </>
+    );
+  }
+  return <div>구현중</div>;
 };
 
 PostImages.propTypes = {
