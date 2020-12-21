@@ -82,6 +82,21 @@
   ```
 - why? 리렌더링 방지
 - 최상위 노드에서 개발을 시작할 때 의미가 있는 단위로 컴포넌트를 먼저 짠다음 코드를 만들어 나가는 것이 좋다.
+- 배열안에 JSX를 넣을 때는 항상 key값을 넣어 주어야 한다.
+- PropTypes가 obejct일 경우 shape() 메소드를 통해 안에 들어있는 객체를 구체적으로 관리할 수 있다.
+
+```
+PostCard.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.number,
+    User: PropTypes.object,
+    content: PropTypes.string,
+    ...
+  }).isRequired,
+}
+```
+
+- post의 본래 프로토타입은 object였으나, shape() 메소드를 이용하여 세부적으로 관리하였다.
 
 ## ※ 개념 정리(javascript /react /next)
 
@@ -138,6 +153,33 @@
 - 계속 재실행되면 그만큼 서버에서 다운 받아야 하는 데이터가 많아지므로, 한 번 렌더링된 값을 저장하고 그 함수가 작동할 때만 바꿀 수 있도록 useCallback()처리를 해준다.
 - 자식 컴포넌트에게 props로 함수를 넘겨줄 때는 반드시 useCallback()으로 감싸줘야 한다.
 - props를 받을 때마다 자식 컴포넌트는 부모에게 새로운 함수를 받는 것으로 생각하기 때문에
+
+4. optional chaning 연산자
+
+5. Toggle 기능 구현
+
+```
+  const [liked, setLiked] = useState(false);
+  const onToggleLike = useCallback(() => {
+    setLiked((prev) => !prev);
+  }, []);
+```
+
+- prev라는 이전 상태를 나타내는 키워드를 통해 Toggle 버튼 기능을 만들었다.
+
+```
+    liked ? (
+      <HeartTwoTone
+        twoToneColor="#eb2f96"
+        key="heart"
+        onClick={onToggleLike}
+      />
+    ) : (
+      <HeartOutlined key="heart" onClick={onToggleLike} />
+    )
+```
+
+- 삼항 연산자를 통해 useState의 liked를 기반으로 onToggle 함수를 실행할 수 있다.
 
 ### DevTools
 
