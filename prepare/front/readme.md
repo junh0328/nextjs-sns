@@ -2,22 +2,42 @@
 
 - Next.js에서는 pages 폴더에 페이징 처리를 해줘야 하는데, Next.js의 라이브러리가 pages 폴더를 인식하여 코드 스플리팅을 해주기 때문이다.
 - Next가 react처럼 page안에 있는 페이지들을 라우팅 처리를 해주지 않아도 url창에 파라미터를 입력할 시 자동으로 페이징 처리를 해준다.
-- ex) localhost:3000/profile >> 다이나믹 라우팅 기능
-- Next.js에서는 react-router로 라우팅처리를 돕는 것이 아닌 자체적인 라우터를 활용한다. (page 안에 있는 파일들을 파라미터를 통해 자동으로 라우팅처리 해준다)
+
+```js
+1. React 사용시
+<Link to ="/">index<Link>
+...
+<Route path="/" exact component={index}>
+
+2. Next 사용시
+<Link href="/">
+  <a>index</a>
+</Link>
+
+```
+
+- Route 기능 없이 사용 가능하다.
+- localhost:3000/profile >> 다이나믹 라우팅 기능
 - 코드 스플리팅을 하기 위해서 Link href="/경로" 후에 a태그로 감싸준다.
 
 # 2. antd 사용해 SNS 화면 만들기
 
 - next.js에는 기본적으로 웹팩이 제공되는데, 이 웹팩이 css파일을 스타일 태그로 바꿔서 적용해준다.
 - 따라서 이번 프로젝트는 웹팩을 기반으로 antd와 styled-components를 사용하여 UI 구성한다.
+
+```
+import { Button, Input, Menu } from 'antd';
+와 같이 antd를 사용한 것이 ant-design에서 제공되는 컴포넌트를 사용하여 만든 컴포넌트들이다.
+```
+
 - 다음 프로젝트 진행 시, npm trends에서 검색하여 더 나은 CSS FRAMEWORK 사용하기!
-- antd에서는 class 컴포넌트로 작성이 되있기 때문에 함수형으로 바꾸는 공부 꼭 할 것!
+- 🌟 antd에서는 class 컴포넌트로 작성이 되있기 때문에 함수형으로 바꾸는 공부 꼭 할 것! 🌟
 - pages 폴더 안의 \_app.js는 pages 폴더내의 모든 파일들에 공통으로 들어가는 레이아웃을 담아두었다.
 - components 폴더 안의 AppLayout.js는 특정 컴포넌트에만 쓰이는 부분을 추려 쓰기 위해 만들었다.
 
 # 3. Redux 사용하기
 
-- next에서 리덕스 라이브러리를 손쉽게 사용하기 위해 next-redux-wrapper를 사용한다.
+- 🌟 next에서 리덕스 라이브러리를 손쉽게 사용하기 위해 next-redux-wrapper를 사용한다. 🌟
 - yarn add next-redux-wrapper / npm install next-redux-wrapper 로 모듈 다운로드
 - yarn add redux / npm install redux로 모듈 다운로드
 - react-redux 사용이세 리액트-리덕스를 사용하기위해 provider 로 컴포넌트 전체를 감싸주었지만, next.js에서는 자동으로 감싸 주기 때문에 감싸 주지 않는다.
@@ -25,27 +45,27 @@
 - next-redux-wrapper의 createWrapper 함수를 사용하여 스토어를 감싸준다.
 - 리덕스 기능을 사용하기 위해 createStore를 통해 스토어를 만들고 리듀서를 연결한다.
 
-- 리액트에서는 모든 파일들을 컴포넌트로 분리하여 관리를 하기 때문에 중앙 데이터 저장소가 필요하다.
-- why? 데이터의 일치성을 주기 위해
-- 이 중앙 데이터 저장소의 역할을 하는 것이 Context API, Redux, MobX 등이 있다.
+- 🌟 리액트에서는 모든 파일들을 컴포넌트로 분리하여 관리를 하기 때문에 중앙 데이터 저장소가 필요하다. 🌟
+- why? 데이터의 일치성을 주기 위해 + 데이터 추적(히스토리) 관리 용의 때문
+- 중앙 데이터 저장소의 역할을 하는 것이 Context API, Redux, MobX 등이 있다.
 - 리덕스를 사용하는 이유는 에러 추적이 용이하다. 앱이 안정적 but, 코드량이 많아진다.
 - MobX는 코드량은 줄지만, 추적이 어렵다.
-- 따라서, 비동기를 지원하기 쉽냐의 유무에 따라 선택한다.(실패에 대비하기 위해)
+- 🌟 따라서, 비동기를 지원하기 쉽냐의 유무에 따라 선택한다.(실패에 대비하기 위해) 🌟 후에 더 알아볼 것!
 
-```
-   데이터 보내줘(요청) >  데이터 받기(성공) or 데이터 받기 실패(실패)
+```js
+// 데이터 보내줘(요청) >  데이터 받기(성공) or 데이터 받기 실패(실패)
+// Context API 사용시
 
-   ★Context API 사용시
-
-  useEffect(()=> {
-    axios.get('/data)
-      .then(()=>{
-        setState(data);
-      })
-      .catch(()=>{
-        setError(error);
-      })
-  })
+useEffect(() => {
+  axios
+    .get("/data")
+    .then(() => {
+      setState(data);
+    })
+    .catch(() => {
+      setError(error);
+    });
+});
 ```
 
 - Copntext API를 사용하면 비동기 요청을 처리할 때, 컴포넌트에서 위와 같이 데이터 요청을 하게 되면 의도치 않게 수많은 컴포넌트에서 데이터 요청의 중복이 발생한다.
@@ -55,7 +75,7 @@
 - 개발자 도구의 Redux 창에서 react-devtools를 통해 사용한다.
 
 - 리덕스를 사용하다보면 다양한 상황에서 리듀서를 통해 컴포넌트에 적용하게 되는데, 리듀서의 종류가 많아질 때 리듀서를 나눠줄 수 있다. (스토어는 오직 하나뿐)
-- 이번 강의에서는 리듀서를 initialState의 객체를 기준으로 users: {...} ->user.js, post: {...} ->post.js로 나누었다.
+- 이번 강의에서는 리듀서를 initialState의 객체를 기준으로 users: {...} ->user.js, post: {...} ->post.js로 나누었다. 🌟 리듀서 쪼개기 🌟
 
 ## ※ 개발 꿀팁(ui)
 
@@ -67,25 +87,31 @@
 
 ## ※ 개발 꿀팁(react/ next)
 
-- next.js에서 head 부분을 수정하기 위해서는 Head라는 컴포넌트를 임포트 시켜서 사용해야 한다.
+- next.js에서 <head> 부분을 수정하기 위해서는 Head라는 컴포넌트를 임포트 시켜서 사용해야 한다.
 - 컴포넌트에 props로 넘겨주는 함수는 useCallback으로 꼭 넘겨주어 최적화 시킬 것!
 - 인라인태그로 styled를 주게 되면, 리액트에서는 virtual DOM이 해당 컴포넌트를 계속 인식해서 렌더링해주기 때문에 최적화가 이루어지지 않는다.
 - 따라서 styled-component를 사용하여 인라인 태그 대신해서 감싸준다. (AppLayout의 SearchInput은 antd에서 받은 스타일을 다시 한 번 바꿔주었다.)
-  ```
+- 하지만 이는 deploy시에 최적화 문제가 발생했을 경우 진행해도 늦지 않으므로 프로젝트의 규모에 따라 처리속도가 느려질 경우에 실행하는 것이 좋다.
+
+  ```js
   const SearchInput = stled(Input.Search)`
   vertical-align: middle;
   `;
   ```
+
 - 스타일드 컴포넌트를 사용하지 않기 위해서는 useMemo를 사용해서 해당 스타일 값을 감싸준다.(클린업 함수[ ] 포함)
-  ```
+
+  ```js
   const style = useMemo(()=> ({ marginTop: 10}). []);
   ```
+
 - why? 리렌더링 방지
 - 최상위 노드에서 개발을 시작할 때 의미가 있는 단위로 컴포넌트를 먼저 짠다음 코드를 만들어 나가는 것이 좋다.
 - 배열안에 JSX를 넣을 때는 항상 key값을 넣어 주어야 한다.
-- PropTypes가 obejct일 경우 shape() 메소드를 통해 안에 들어있는 객체를 구체적으로 관리할 수 있다.
 
-```
+- 🌟 PropTypes가 obejct일 경우 shape() 메소드를 통해 안에 들어있는 객체를 구체적으로 관리할 수 있다. 🌟
+
+```js
 PostCard.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number,
@@ -106,7 +132,7 @@ PostCard.propTypes = {
 
 2. 참조(복사의 deps)
 
-```
+```js
   2.1
   {} === {} // false
 
@@ -116,21 +142,19 @@ PostCard.propTypes = {
   a === b // true
 ```
 
-```
-  2.2
-  const next = {b: 'c'};
-  const prev = {a: next};
+```js
+2.2;
+const next = { b: "c" };
+const prev = { a: next };
 
-  const next = {...prev}
+const next = { ...prev };
 
-  prev.a === next.a
-  >> true
+prev.a === next.a >> true;
 
-  prev === next
-  >> false
+prev === next >> false;
 ```
 
-- 같은 참조 값을 가지고 있는 상태인 prev.a와 next.a는 같지만, 객체 자체는 서로 다른 객체이므로 prev === next는 false 이다.
+- 같은 참조 🌟값🌟을 가지고 있는 상태인 prev.a와 next.a는 같지만, 🌟객체 자체는 서로 다른 객체이므로🌟 prev === next는 false 이다.
 - 자바스크립트에서 객체와 객체를 비교하게 되면 빈 객체여도 false가 나온다.
 - 객체를 새로 만든 것은 항상 false이지만, 객체를 참조하게 되면 true가 나온다.
 - 따라서 react에서는 (...) spread 연산자를 통해 객체를 새로 만들어 참조해 오게 된다.
@@ -139,7 +163,7 @@ PostCard.propTypes = {
 
 3. useMemo <-> useCallback?
 
-```
+```url
   https://www.youtube.com/watch?v=6H6KncvVc8s
   https://www.youtube.com/watch?v=uBmnf_k7_r0
 ```
@@ -158,25 +182,21 @@ PostCard.propTypes = {
 
 5. Toggle 기능 구현
 
-```
-  const [liked, setLiked] = useState(false);
-  const onToggleLike = useCallback(() => {
-    setLiked((prev) => !prev);
-  }, []);
+```js
+const [liked, setLiked] = useState(false);
+const onToggleLike = useCallback(() => {
+  setLiked((prev) => !prev);
+}, []);
 ```
 
 - prev라는 이전 상태를 나타내는 키워드를 통해 Toggle 버튼 기능을 만들었다.
 
-```
-    liked ? (
-      <HeartTwoTone
-        twoToneColor="#eb2f96"
-        key="heart"
-        onClick={onToggleLike}
-      />
-    ) : (
-      <HeartOutlined key="heart" onClick={onToggleLike} />
-    )
+```js
+liked ? (
+  <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} />
+) : (
+  <HeartOutlined key="heart" onClick={onToggleLike} />
+);
 ```
 
 - 삼항 연산자를 통해 useState의 liked를 기반으로 onToggle 함수를 실행할 수 있다.
