@@ -124,6 +124,15 @@ PostCard.propTypes = {
 
 - post의 본래 프로토타입은 object였으나, shape() 메소드를 이용하여 세부적으로 관리하였다.
 
+- react-slick을 이용하여 이미지 캐루셀을 표현할 것이다.
+- 클릭 시, 토글되며 모달 형식으로 다수의 이미지를 넘겨볼 수 있는 방식
+
+```url
+  🌟url 참조🌟
+  - https://www.npmjs.com/package/react-slick
+  - https://codesandbox.io/s/ppwkk5l6xx
+```
+
 ## ※ 개념 정리(javascript /react /next)
 
 1. 리렌더링
@@ -169,8 +178,8 @@ prev === next >> false;
 ```
 
 - 두 번째 인자로 받는 값의 변화에 따라 재 실행되는 것은 같은 속성이다.
-- 하지만, useMemo( )는 실행한 함수의 ★결괏값(=리턴되는 값)★을 기억한다.
-- useCallback( )는 실행하는 ★함수 자체★를 기억한다.
+- 하지만, useMemo( )는 실행한 함수의 🌟결괏값(=리턴되는 값)🌟을 기억한다.
+- useCallback( )는 실행하는 🌟함수 자체🌟를 기억한다.
 - 뭐가 다른데?
 - 함수형 컴포넌트는 항상 함수 전체를 재 실행한다.
 - 그렇기 때문에 useCallback으로 감싸게 되면, 그 함수를 기억하고, 함수가 변화시에만 렌더링 시킬 수 있다.
