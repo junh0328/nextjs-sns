@@ -79,7 +79,7 @@ const PostCard = ({ post }) => {
         />
       </Card>
       {commentFormOpened && (
-        <div>
+        <>
           {/* 댓글은 게시글에 속해있으므로 CommentForm에 post의 상태(initialState)를 넘겨주는 것이다. */}
           <CommentForm post={post} />
           <List
@@ -96,10 +96,8 @@ const PostCard = ({ post }) => {
               </li>
             )}
           />
-        </div>
+        </>
       )}
-      {/* <CommentForm />
-      <Comments /> */}
     </div>
   );
 };

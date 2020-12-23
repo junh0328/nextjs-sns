@@ -18,7 +18,7 @@ export const initialState = {
         },
         {
           src:
-            "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/airpods-max-hero-select-202011_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=80&op_usm=0.5%2C0.5&.v=1603842301000",
+            "https://images-na.ssl-images-amazon.com/images/I/71YuNHQDL5L._AC_SL1500_.jpg",
         },
       ],
       Comments: [

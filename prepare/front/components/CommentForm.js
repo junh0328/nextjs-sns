@@ -23,7 +23,7 @@ const CommentForm = ({ post }) => {
           rows={4}
         />
         <Button
-          style={{ position: "absolute", right: 0, bottom: -40 }}
+          style={{ float: "right", marginTop: "5px", cursor: "pointer" }}
           type="primary"
           htmlType="submit"
         >

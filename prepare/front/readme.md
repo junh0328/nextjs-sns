@@ -133,6 +133,9 @@ PostCard.propTypes = {
   - https://codesandbox.io/s/ppwkk5l6xx
 ```
 
+- styled 컴포넌트의 오타를 잡고 싶을 때
+- 🌟vscode-styled-components🌟 확장 프로그램으로 관리할 수 있다.
+
 ## ※ 개념 정리(javascript /react /next)
 
 1. 리렌더링
