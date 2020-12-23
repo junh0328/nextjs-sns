@@ -137,9 +137,45 @@ export default thunk;
 
 # 5. Redux-saga 사용하기
 
+- redux-thunk에서는 액션들을 직접 만들어 실행했지만, saga에서는 eventListener처럼 주어지는 상황을 만들어 그 상황에 반응하여 다음 행동을 하도록 한다는 것이 가장 큰 차이점이다.
 - redux-thunk에서는 지원하는 함수들이 한정적이기 때문에 직접 구현해야 하는 내용들이 생긴다. Ex) setTimeout과 같은 처리
 - 또한 thunk에서는 로그인 이벤트를 처리할 때 로그인 버튼을 실수로 두 번 누를 경우, 두번 데이터를 모두 서버에 요청하고 처리한다.
 - 하지만, saga에서는 가장 latest(=최근)한 데이터를 처리하기 때문에 셀프 DDOS 공격을 방지한다. ex) 1초에 3번 이상 같은 액션이 발생하면 해당 액션의 마지막만 실행하거나, 액션을 해당 액션을 차단한다.
+- https://github.com/bmealhouse/next-redux-saga 공식문서 확인!
+- npm i redux-saga / yarn add redux-saga
+- generator에 대한 이해가 필요하다.
+
+```js
+const gen = function*(){
+  console.log(1);
+  yield
+  console.log(2);
+  yield
+  console.log(3);
+  yield
+  console.log(4);
+  yield 4;
+}
+  ...
+  const g = gen();
+
+    g.next();
+  > 1,  {value: undefined, done: false}
+    g.next();
+  > 2,  {value: undefined, done: false}
+    g.next();
+  > 3,  {value: undefined, done: false}
+    g.next();
+  > 4,  {value: 4, done: false}
+    g.next();
+  >  {value: undefined, done: true}
+
+  generator는 함수 안에 yield를 넣어주면 그 부분까지 실행되고 멈추게 된다. (중단점을 가진다.)
+```
+
+- 후에 이 generator를 통해 무한의 개념을 표현할 수 있다. 🌟(saga 공부가 더 되면, 좀 더 자세히 적기)🌟
+
+## 5.1 saga 이펙트 알아보기
 
 ## 🌟 개발 꿀팁(ui)
 
