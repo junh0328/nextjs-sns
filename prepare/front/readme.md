@@ -77,7 +77,71 @@ useEffect(() => {
 - 리덕스를 사용하다보면 다양한 상황에서 리듀서를 통해 컴포넌트에 적용하게 되는데, 리듀서의 종류가 많아질 때 리듀서를 나눠줄 수 있다. (스토어는 오직 하나뿐)
 - 이번 강의에서는 리듀서를 initialState의 객체를 기준으로 users: {...} ->user.js, post: {...} ->post.js로 나누었다. 🌟 리듀서 쪼개기 🌟
 
-## ※ 개발 꿀팁(ui)
+# 4. Redux-thunk 이해하기
+
+- redux thunk는 리덕스의 미들웨어이다.
+- 미들웨어란 리덕스의 기능을 향상시켜주는 역할을 한다. (원래 리덕스에 없던 기능을 추가해준다.)
+- 그 중 redux-thunk는 리덕스가 비동기 액션을 디스패치할 수 있게 만들어주는 미들웨어이다.
+- https://github.com/reduxjs/redux-thunk redux-thunk 공식 문서
+
+```js
+4.1 일반 액션생성함수
+const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
+
+function increment() {
+  return {
+    type: INCREMENT_COUNTER,
+  };
+}
+
+4.2 비동기 처리된 액션생성함수
+function incrementAsync() {
+  return (dispatch) => {
+    setTimeout(() => {
+      // Yay! Can invoke sync or async actions with `dispatch`
+      dispatch(increment());
+    }, 1000);
+  };
+}
+```
+
+- why? > 하나의 비동기 액션 안에서 여러 개의 동기 액션을 실행할 수 있다.
+- 예를 들어 axios()를 통해 특정 api를 받아오는 요청을 보낼 때, 동기적으로 해당 데이터를 구성하는 스타일드 컴포넌트와 같은 UI를 불러올 수 도 있다는 뜻이다.
+- 또 이번 프로젝트에서 리듀서를 통해 login과 logout을 관리하는데, 실제 데이터가 오고 가는 과정에서는 지금처럼 버튼 클릭만으로 바로 로그인되지 않는다.
+  (사용자가 입력한 데이터의 확인 과정이 필요하기 때문)
+-
+- npm i redux-thunk/ yarn add redux-thunk를 통해 다운!
+
+```js
+🌟공식 문서의 소스코드는 다음과 같다.🌟
+function createThunkMiddleware(extraArgument) {
+  return ({ dispatch, getState }) => (next) => (action) => {
+    if (typeof action === 'function') {
+      return action(dispatch, getState);
+    }
+    // 액션을 실행하기 전에 실행하고자 하는 함수들을 위에 적는다.
+    return next(action);
+
+  };
+}
+
+const thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+export default thunk;
+
+```
+
+- 액션은 원래 객체이지만, thunk에서는 액션을 함수로 둘 수 있다.
+- 액션이 함수인 경우, 액션이 지연 함수이기 때문에 해당 리턴되는 액션 나중에 실행할 수 있다.
+
+# 5. Redux-saga 사용하기
+
+- redux-thunk에서는 지원하는 함수들이 한정적이기 때문에 직접 구현해야 하는 내용들이 생긴다. Ex) setTimeout과 같은 처리
+- 또한 thunk에서는 로그인 이벤트를 처리할 때 로그인 버튼을 실수로 두 번 누를 경우, 두번 데이터를 모두 서버에 요청하고 처리한다.
+- 하지만, saga에서는 가장 latest(=최근)한 데이터를 처리하기 때문에 셀프 DDOS 공격을 방지한다. ex) 1초에 3번 이상 같은 액션이 발생하면 해당 액션의 마지막만 실행하거나, 액션을 해당 액션을 차단한다.
+
+## 🌟 개발 꿀팁(ui)
 
 - 그리드를 만들 때는 가로(Row) 먼저 나누고 세로(Col)로 나눌 것
 - Col 속성 : xs: 모바일 / sm: 태블릿 / md: 작은 데스크탑
@@ -85,7 +149,7 @@ useEffect(() => {
 - 반응형 웹을 만들기 위해서는 모바일 > 테블릿 > 데스크탑 순으로 진행한다.
 - a 태그로 target="\_blank"를 줄 때는 rel 로 noreferrer noopener를 통해 보안을 신경 써 준다.
 
-## ※ 개발 꿀팁(react/ next)
+## 🌟 개발 꿀팁(react/ next)
 
 - next.js에서 <head> 부분을 수정하기 위해서는 Head라는 컴포넌트를 임포트 시켜서 사용해야 한다.
 - 컴포넌트에 props로 넘겨주는 함수는 useCallback으로 꼭 넘겨주어 최적화 시킬 것!
