@@ -137,6 +137,8 @@ export default thunk;
 
 # 5. Redux-saga 사용하기
 
+## 5.1 saga란?
+
 - redux-thunk에서는 액션들을 직접 만들어 실행했지만, saga에서는 eventListener처럼 주어지는 상황을 만들어 그 상황에 반응하여 다음 행동을 하도록 한다는 것이 가장 큰 차이점이다.
 - redux-thunk에서는 지원하는 함수들이 한정적이기 때문에 직접 구현해야 하는 내용들이 생긴다. Ex) setTimeout과 같은 처리
 - 또한 thunk에서는 로그인 이벤트를 처리할 때 로그인 버튼을 실수로 두 번 누를 경우, 두번 데이터를 모두 서버에 요청하고 처리한다.
@@ -144,6 +146,8 @@ export default thunk;
 - https://github.com/bmealhouse/next-redux-saga 공식문서 확인!
 - npm i redux-saga / yarn add redux-saga
 - generator에 대한 이해가 필요하다.
+
+## 5.2 saga의 generator
 
 ```js
 const gen = function*(){
@@ -171,11 +175,57 @@ const gen = function*(){
   >  {value: undefined, done: true}
 
   generator는 함수 안에 yield를 넣어주면 그 부분까지 실행되고 멈추게 된다. (중단점을 가진다.)
+  또한 .next()함수를 사용하여 generator로 만든 함수를 사용한다.
 ```
 
-- 후에 이 generator를 통해 무한의 개념을 표현할 수 있다. 🌟(saga 공부가 더 되면, 좀 더 자세히 적기)🌟
+- next()를 실행하면 value 값과 done의 boolean 값을 알 수 있는데, done의 불린 값을 통해 만든 함수가 끝까지 실행됬는지의 여부를 알 수 있다.
+- 따라서 yield를 사용하여 찍히는 로그 값을 통해, 비동기 함수의 작동 여부를 순차적으로 체크할 수 있다는 것이 가장 큰 장점이다.
+- 이 yield의 성질을 활용하는 것이 redux-saga라고 볼 수 있다.
 
-## 5.1 saga 이펙트 알아보기
+```js
+🌟절대 멈추지 않는 generator🌟
+const gen = function*(){
+  while(true){
+    yield i++;
+  }
+}
+>>> undefined
+why? 원래 whilte true는 무한 반복을 의미하지만, yield의 비동기적 특징때문에 무한 반복되지 않는다.
+...
+const g = gen();
+g.next();
+> {value: 0, done: false}
+g.next();
+> {value: 1, done: false}
+
+- next() 함수를 통해, 다음 값부터는 value가 찍히지만 done은 계속 false가 나올 것이다. (while true 이기 때문)
+- 이런 generator의 성질을 이용하여 자바스크립트에서는 무한 값을 표현하게 된다.
+```
+
+## 5.3 saga 사용법
+
+- 설치한 next-redux-saga를 사용하기 위해서는 pages/\_app.js에서 withReduxSaga를 import 시켜야 한다.
+
+```js
+export default wrapper.withRedux(withReduxSaga(NodeBird));
+```
+
+- hoc(high-order-component)를 통해 해당 프로젝트에서 redux-saga를 사용할 수 있게 묶어주었다.
+- Redux의 추가된 기능이 redux-saga이므로 withRedux 다음으로 한 번 더 감싸게 되는 것이다.
+
+## 5.4 saga의 이펙트 (effects)
+
+- 처음 배울 때 yield 뒤에 변수값을 받아 오거나, 조건 문을 통해 문장을 제어하였는데, saga를 활용하기 위해서는 이펙트들을 잘 활용해야 한다.
+
+  |           값           |                                                         의미                                                         |
+  | :--------------------: | :------------------------------------------------------------------------------------------------------------------: |
+  |        all([ ])        |                 yield에서 배열을 받는다. 그 배열안에 들어있는 함수(fork, call)를 한번에 실행해준다.                  |
+  |        fork( )         | 함수를 실행한다. (비동기 함수 호출), 요청을 보내고 결과와 상관없이 바로 다음 함수로 넘어간다. (블로킹을 하지않는다.) |
+  |        call( )         |       함수를 실행한다. (동기 함수 호출), 리턴 받을 때까지 기다렸다가 리턴 받은 값을 넣어준다. (블로킹을 한다.)       |
+  | take("ACTION", action) |    'ACTION' 이라는 액션이 실행될 때까지 기다리겠다. 'ACTION'이 실행되면, action이라는 generator 함수를 실행한다.     |
+  |        put({ })        |                            액션 객체를 실행시킨다. (redux의 dispatch와 같은 행동을 한다)                             |
+
+- yield 는 async/ await의 await과 비슷하다고 생각하면 쉽다.
 
 ## 🌟 개발 꿀팁(ui)
 
