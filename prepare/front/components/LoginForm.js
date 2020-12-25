@@ -3,8 +3,8 @@ import { Form, Button, Input } from "antd";
 import Link from "next/Link";
 import styled from "styled-components";
 import useinput from "../hooks/useinput";
-import { useDispatch } from "react-redux";
-import { loginAction } from "../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
+import { loginRequestAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -16,12 +16,13 @@ const FormWrapper = styled(Form)`
 const LoginForm = () => {
   const dispatch = useDispatch();
   // 더미(가짜) 데이터로 그냥 아이디와 비밀번호가 넘어오는 상태를 관리한다.
+  const { isLoggingIn } = useSelector((state) => state.user);
   const [id, onChangeId] = useinput("");
   const [password, onChangePassword] = useinput("");
 
   const onSubmitForm = useCallback(() => {
     console.log(id, password);
-    dispatch(loginAction(id, password));
+    dispatch(loginRequestAction({ id, password }));
   }, [id, password]);
 
   return (
@@ -50,7 +51,7 @@ const LoginForm = () => {
         />
       </div>
       <ButtonWrapper>
-        <Button type="primary" htmlType="submit" loading={false}>
+        <Button type="primary" htmlType="submit" loading={isLoggingIn}>
           로그인
         </Button>
         <Link href="/signup">
