@@ -42,10 +42,14 @@ export const initialState = {
 };
 
 // 액션 생성함수를 다음과 같이 상수로 지정한다면, reducer에서 오류 나는 것을 사전에 잡을 수 있다.
-const ADD_POST = "ADD_POST";
-export const addPost = {
-  type: ADD_POST,
-};
+export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
+export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
+export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
+
+export const addPost = (data) => ({
+  type: ADD_POST_REQUEST,
+  data,
+});
 
 const dummyPost = {
   id: 2,
@@ -60,7 +64,8 @@ const dummyPost = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_POST: {
+    case ADD_POST_REQUEST:
+    case ADD_POST_SUCCESS: {
       return {
         ...state,
         mainPosts: [dummyPost, ...state.mainPosts],
@@ -68,6 +73,7 @@ const reducer = (state = initialState, action) => {
         postAdded: true,
       };
     }
+    case ADD_POST_FAILURE:
     default:
       return state;
   }
