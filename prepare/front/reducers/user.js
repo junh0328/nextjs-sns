@@ -99,8 +99,30 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         logOutLoading: false, 
+        logOutError: action.error,
         me: null,
       };
+      case SIGN_UP_REQUEST:
+        return {
+          ...state,
+          signUpLoading: true, 
+          signUpDone: false,
+          signUpError: null,
+        };
+      case SIGN_UP_SUCCESS:
+        return {
+          ...state,
+          signUpLoading: false, 
+          signUpDone: true,
+          me: null,
+        };
+      case SIGN_UP_FAILURE:
+        return {
+          ...state,
+          signUpLoading: false, 
+          signUpError: action.error,
+          me: null,
+        };
     default:
       return state;
   }
