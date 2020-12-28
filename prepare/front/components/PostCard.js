@@ -1,8 +1,3 @@
-/*
-  이 웹서비스를 이용하는 사람들의 게시글을 볼 수 있는 페이지이다. 
-  index.js페이지의 자식 컴포넌트이다.
-*/
-
 import { Avatar, Button, Card, Comment, List, Popover } from "antd";
 import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
@@ -81,12 +76,11 @@ const PostCard = ({ post }) => {
       </Card>
       {commentFormOpened && (
         <>
-          {/* 댓글은 게시글에 속해있으므로 CommentForm에 post의 상태(initialState)를 넘겨주는 것이다. */}
           <CommentForm post={post} />
           <List
-            header={`${post.Comments.length}개의 댓글`}
+            header={`${post.Comments ? post.Comments.length : 0}개의 댓글`}
             itemLayout="horizontal"
-            dataSource={post.Comments}
+            dataSource={post.Comments || []}
             renderItem={(item) => (
               <li>
                 <Comment

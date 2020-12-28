@@ -1,4 +1,4 @@
-import shortID from "shortid";
+import shortId from "shortId";
 
 export const initialState = {
   mainPosts: [
@@ -69,7 +69,7 @@ export const addComment = (data) => ({
 });
 
 const dummyPost = (data) => ({
-  id: shortID.generate(),
+  id: shortId.generate(),
   content: data,
   User: {
     id: 1,
@@ -80,7 +80,7 @@ const dummyPost = (data) => ({
 });
 
 const dummyComment = (data) => ({
-  id: shortID.generate(),
+  id: shortId.generate(),
   content: data,
   User: {
     id: 1,
@@ -122,13 +122,22 @@ const reducer = (state = initialState, action) => {
       };
     case ADD_COMMENT_SUCCESS: {
       // action.data.content, postId, userId 가 들어옴 > ADD_POST_SUCCESS로 전달됨
+      // 불변
+      // const postIndex = state.mainPosts.findIndex(
+      //   (y) => y.id === action.data.postId
+      // );
+      // const post = { ...state.mainPosts[postIndex] };
+      // const Comments = [dummyComment(action.data.content), ...post.Comments];
+      // const mainPosts = [...state.mainPosts];
+      // mainPosts[postIndex] = { post };
+
       const postIndex = state.mainPosts.findIndex(
-        (y) => y.id === action.data.postId
+        (v) => v.id === action.data.postId
       );
       const post = { ...state.mainPosts[postIndex] };
-      const Comments = [dummyComment(action.data.content), ...post.Comments];
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
       const mainPosts = [...state.mainPosts];
-      mainPosts[postIndex] = { post };
+      mainPosts[postIndex] = post;
 
       return {
         ...state,

@@ -38,10 +38,9 @@ function addCommentAPI(data) {
 
 function* addComment(action) {
   try {
-    delay(1000);
     // const result = yield call(addCommentAPI, action.data);
+    delay(1000);
     yield put({
-      // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: ADD_COMMENT_SUCCESS,
       data: action.data,
     });

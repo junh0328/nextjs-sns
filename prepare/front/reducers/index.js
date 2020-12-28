@@ -1,7 +1,7 @@
-import { HYDRATE } from 'next-redux-wrapper';
-import { combineReducers } from 'redux';
-import user from './user';
-import post from './post';
+import { HYDRATE } from "next-redux-wrapper";
+import { combineReducers } from "redux";
+import user from "./user";
+import post from "./post";
 
 /* 
 1.combineReducers를 통해 인덱스 리듀서와, user 리듀서, post 리듀서를 합쳐주었다.
@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
   index: (state = {}, action) => {
     switch (action.type) {
       case HYDRATE:
-        console.log('HYDRATE', action);
+        console.log("HYDRATE", action);
         return { ...state, ...action.payload };
       default:
         return state;
