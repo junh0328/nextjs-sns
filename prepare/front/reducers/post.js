@@ -6,7 +6,7 @@ export const initialState = {
       id: 1,
       User: {
         id: 1,
-        nickname: "이준희",
+        nickname: "준희",
       },
       content: "첫 번째 게시글 #해시태그 #익스프레스",
       Images: [
@@ -122,14 +122,6 @@ const reducer = (state = initialState, action) => {
       };
     case ADD_COMMENT_SUCCESS: {
       // action.data.content, postId, userId 가 들어옴 > ADD_POST_SUCCESS로 전달됨
-      // 불변
-      // const postIndex = state.mainPosts.findIndex(
-      //   (y) => y.id === action.data.postId
-      // );
-      // const post = { ...state.mainPosts[postIndex] };
-      // const Comments = [dummyComment(action.data.content), ...post.Comments];
-      // const mainPosts = [...state.mainPosts];
-      // mainPosts[postIndex] = { post };
 
       const postIndex = state.mainPosts.findIndex(
         (v) => v.id === action.data.postId
@@ -141,6 +133,7 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };

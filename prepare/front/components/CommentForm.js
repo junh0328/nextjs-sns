@@ -38,6 +38,7 @@ const CommentForm = ({ post }) => {
           rows={4}
         />
         <Button
+          //button 처리 안되던 문제는 z-index가 낮아서 선택이 되지 않았던 것
           style={{ position: "absolute", right: 0, bottom: -40, zIndex: 1 }}
           type="primary"
           htmlType="submit"

@@ -21,7 +21,6 @@ function* addPost(action) {
     yield put({
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: ADD_POST_SUCCESS,
-      // data: result.data,
       data: action.data,
     });
   } catch (err) {
