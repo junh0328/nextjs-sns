@@ -11,27 +11,34 @@ export const initialState = {
       content: "첫 번째 게시글 #해시태그 #익스프레스",
       Images: [
         {
+          id: shortId.generate(),
           src:
             "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/airpods-max-hero-select-202011_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=80&op_usm=0.5%2C0.5&.v=1603842301000",
         },
         {
+          id: shortId.generate(),
           src:
             "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/MWP22?wid=2000&hei=2000&fmt=jpeg&qlt=95&op_usm=0.5,0.5&.v=1591634795000",
         },
         {
+          id: shortId.generate(),
           src:
             "https://images-na.ssl-images-amazon.com/images/I/71YuNHQDL5L._AC_SL1500_.jpg",
         },
       ],
       Comments: [
         {
+          id: shortId.generate(),
           User: {
+            id: shortId.generate(),
             nickname: "nero",
           },
           content: "어디서 사셨나요? 정보좀요!",
         },
         {
+          id: shortId.generate(),
           User: {
+            id: shortId.generate(),
             nickname: "zeroCho",
           },
           content: "잘 어울려요 찰떡!",
@@ -44,6 +51,10 @@ export const initialState = {
   addPostDone: false,
   addPostError: null,
 
+  removePostLoading: false,
+  removePostDone: false,
+  removePostError: null,
+
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -53,6 +64,10 @@ export const initialState = {
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
 export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
+
+export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
+export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
+export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 
 export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
@@ -69,8 +84,8 @@ export const addComment = (data) => ({
 });
 
 const dummyPost = (data) => ({
-  id: shortId.generate(),
-  content: data,
+  id: data.id,
+  content: data.content,
   User: {
     id: 1,
     nickname: "준희",
@@ -108,6 +123,27 @@ const reducer = (state = initialState, action) => {
       };
     }
     case ADD_POST_FAILURE:
+      return {
+        ...state,
+        addPostLoading: false,
+        addPostError: action.error,
+      };
+    case REMOVE_POST_REQUEST:
+      return {
+        ...state,
+        addPostLoading: true,
+        addPostDone: false,
+        addPostError: null,
+      };
+    case REMOVE_POST_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
+        addPostLoading: false,
+        addPostDone: true,
+      };
+    }
+    case REMOVE_POST_FAILURE:
       return {
         ...state,
         addPostLoading: false,
