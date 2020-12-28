@@ -21,7 +21,7 @@ function loginAPI(data) {
 function* logIn(action) {
   try {
     console.log("saga login");
-    yield delay(2000);
+    yield delay(1000);
     // const result = yield call(loginAPI, action.data);
     // result는 loginAPI에서 리턴된 값(action.data)이다.
     // 여기서 데이터를 넘겨받는 것을 실패할 경우 바로 catch문으로 넘어간다.
@@ -45,7 +45,7 @@ function logOutAPI() {
 
 function* logOut() {
   try {
-    delay(2000);
+    delay(1000);
     // const result = yield call(logOutAPI);
     yield put({
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
@@ -66,7 +66,7 @@ function signUpAPI() {
 
 function* signUp() {
   try {
-    delay(2000);
+    delay(1000);
     // const result = yield call(signUpAPI);
     yield put({
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.

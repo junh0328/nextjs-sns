@@ -1,3 +1,5 @@
+import shortID from "shortid";
+
 export const initialState = {
   mainPosts: [
     {
@@ -66,16 +68,25 @@ export const addComment = (data) => ({
   data,
 });
 
-const dummyPost = {
-  id: 2,
-  content: "더미데이터입니다.",
+const dummyPost = (data) => ({
+  id: shortID.generate(),
+  content: data,
   User: {
     id: 1,
-    nickname: "이준희",
+    nickname: "준희",
   },
   Images: [],
   Comments: [],
-};
+});
+
+const dummyComment = (data) => ({
+  id: shortID.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: "준희",
+  },
+});
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -89,7 +100,8 @@ const reducer = (state = initialState, action) => {
     case ADD_POST_SUCCESS: {
       return {
         ...state,
-        mainPosts: [dummyPost, ...state.mainPosts],
+        // mainPosts에는 자신의 글 뿐만 아니라,  (댓글은 id를 통해 관리된다.) Comments를 통해 들어오는 댓글도 관리된다.
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
         // dummyPost를 파라미터 중 앞에다 추가해야 게시글 가장 위에 나열된다!
         addPostLoading: false,
         addPostDone: true,
@@ -109,6 +121,15 @@ const reducer = (state = initialState, action) => {
         addCommentError: null,
       };
     case ADD_COMMENT_SUCCESS: {
+      // action.data.content, postId, userId 가 들어옴 > ADD_POST_SUCCESS로 전달됨
+      const postIndex = state.mainPosts.findIndex(
+        (y) => y.id === action.data.postId
+      );
+      const post = { ...state.mainPosts[postIndex] };
+      const Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = { post };
+
       return {
         ...state,
         addCommentLoading: false,

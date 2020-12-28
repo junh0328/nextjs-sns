@@ -250,6 +250,16 @@ export default wrapper.withRedux(withReduxSaga(NodeBird));
 - data흐름 AppLayOut > LoginForm > UserProfile 생각해보고 숙지하기
 - reducer, redux-saga
 
+## 5.6 더미데이터 만들고, 댓글 saga 작성하기
+
+- 백엔드와의 연동 전에 우리는 우리가 만든 더미데이터를 통해서 입력하는 기능들이 구현되는지 확인한다.
+- 이때, 우리가 만든 로직에서 반복문을 통해 기능들이 구현되는데, id 값을 그때마다 넣어줄 수 없으므로 shortid와 faker 모듈을 사용한다.
+- shortid / faker 모듈을 사용하면 겹치기 힘든 id를 자동으로 생성해준다.
+
+- 불변성의 핵심은 바뀌는 것만 새로운 객체로 만들고, 나머지 객체는 참조를 유지하는 것이다.
+- 그래야만 바뀌는 것만 바뀌고 안바뀌는 것은 참조가 유지되어 메모리를 절약할 수 있기 때문이다.
+- 이 불변성을 유지하면서 편하게 쓸 수 있는 라이브러리가 immer 이다.
+
 ## 🌟 개발 꿀팁(ui)
 
 - 그리드를 만들 때는 가로(Row) 먼저 나누고 세로(Col)로 나눌 것
@@ -409,3 +419,11 @@ liked ? (
 - 아닐 경우 그냥 문자열(v)를 리턴한다.
 - 매핑(map)을 할 때는 원래 key 값이 필요한데, 문자열을 분리하는 상황에서는 key값이 다양한 게시글에 의해 중복될 수 있으므로 index (i)를 사용했다.
 - index를 사용하여 key값을 나타내면 무거워질 경우 렌더링 문제가 생길 수 있지만, 최대한 자제하는 방향에서 사용할 수 있을 것이다.
+
+## 🌟 에러를 잡자 🌟
+
+- ReferenceError: is not defined
+
+```url
+https://wickedmagic.tistory.com/444
+```

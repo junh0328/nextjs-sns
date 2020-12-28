@@ -16,12 +16,13 @@ function addPostAPI(data) {
 
 function* addPost(action) {
   try {
-    delay(2000);
+    delay(1000);
     // const result = yield call(addPostAPI, action.data);
     yield put({
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: ADD_POST_SUCCESS,
       // data: result.data,
+      data: action.data,
     });
   } catch (err) {
     yield put({
@@ -37,12 +38,12 @@ function addCommentAPI(data) {
 
 function* addComment(action) {
   try {
-    delay(2000);
+    delay(1000);
     // const result = yield call(addCommentAPI, action.data);
     yield put({
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: ADD_COMMENT_SUCCESS,
-      // data: result.data,
+      data: action.data,
     });
   } catch (err) {
     yield put({
