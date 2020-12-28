@@ -1,22 +1,27 @@
-import Head from 'next/head';
-import React, { useCallback, useState } from 'react';
-import { Form, Input, Checkbox, Button } from 'antd';
-import styled from 'styled-components';
+import Head from "next/head";
+import React, { useCallback, useState } from "react";
+import { Form, Input, Checkbox, Button } from "antd";
+import styled from "styled-components";
 
-import AppLayout from '../components/AppLayout';
-import useinput from '../hooks/useinput';
+import AppLayout from "../components/AppLayout";
+import useinput from "../hooks/useinput";
+import { SIGN_UP_REQUEST } from "../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
 // 인라인 태그로 작성시에 리렌더링을 방지하기 위해 styled component로 사용
 const ErrorMessage = styled.div`
   color: red;
 `;
 
 const Signup = () => {
-  const [id, onChangeId] = useinput('');
-  const [nickname, onChangeNickname] = useinput('');
-  const [password, onChangePassword] = useinput('');
+  const dispatch = useDispatch();
+  const { signUpLoading } = useSelector((state) => state.user);
+
+  const [email, onChangeemail] = useinput("");
+  const [nickname, onChangeNickname] = useinput("");
+  const [password, onChangePassword] = useinput("");
 
   // 비밀번호 체크 및 에러
-  const [passwordCheck, setPasswordCheck] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const onChangPasswordCheck = useCallback(
     (e) => {
@@ -26,7 +31,7 @@ const Signup = () => {
     [password]
   );
   // 약관 동의 상태 및 에러
-  const [term, setTerm] = useState('');
+  const [term, setTerm] = useState("");
   const [termError, setTermError] = useState(false);
   const onChangeTerm = useCallback((e) => {
     setTerm(e.target.checked);
@@ -40,7 +45,11 @@ const Signup = () => {
     if (!term) {
       return setTermError(true);
     }
-    console.log(id, nickname, password);
+    console.log(email, nickname, password);
+    dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, password, nickname },
+    });
   }, [password, passwordCheck, term]);
 
   return (
@@ -50,9 +59,15 @@ const Signup = () => {
       </Head>
       <Form onFinish={onSubmit}>
         <div>
-          <label htmlFor="user-id">아이디</label>
+          <label htmlFor="user-email">이메일</label>
           <br />
-          <Input name="user-id" value={id} required onChange={onChangeId} />
+          <Input
+            name="user-email"
+            type="email"
+            value={email}
+            required
+            onChange={onChangeemail}
+          />
         </div>
         <div>
           <label htmlFor="user-nick">닉네임</label>
@@ -84,7 +99,7 @@ const Signup = () => {
             onChange={onChangPasswordCheck}
           />
           {passwordError && (
-            <ErrorMessage style={{ color: 'red' }}>
+            <ErrorMessage style={{ color: "red" }}>
               비밀번호가 일치하지 않습니다.
             </ErrorMessage>
           )}
@@ -96,7 +111,7 @@ const Signup = () => {
           {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={signUpLoading}>
             가입하기
           </Button>
         </div>

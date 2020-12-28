@@ -16,26 +16,26 @@ const FormWrapper = styled(Form)`
 const LoginForm = () => {
   const dispatch = useDispatch();
   // 더미(가짜) 데이터로 그냥 아이디와 비밀번호가 넘어오는 상태를 관리한다.
-  const { isLoggingIn } = useSelector((state) => state.user);
-  const [id, onChangeId] = useinput("");
+  const { logInLoading } = useSelector((state) => state.user);
+  const [email, onChangeEmail] = useinput("");
   const [password, onChangePassword] = useinput("");
 
   const onSubmitForm = useCallback(() => {
-    console.log(id, password);
-    dispatch(loginRequestAction({ id, password }));
-  }, [id, password]);
+    console.log(email, password);
+    dispatch(loginRequestAction({ email, password }));
+  }, [email, password]);
 
   return (
     //   onFinish에는 자동으로 e.preventDefault()가 적용이 되있다.
     <FormWrapper onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-id">아이디</label>
+        <label htmlFor="user-email">이메일</label>
         <br />
         <Input
-          name="user-id"
+          name="user-email"
           type="text"
-          value={id}
-          onChange={onChangeId}
+          value={email}
+          onChange={onChangeEmail}
           required
         />
       </div>
@@ -51,7 +51,7 @@ const LoginForm = () => {
         />
       </div>
       <ButtonWrapper>
-        <Button type="primary" htmlType="submit" loading={isLoggingIn}>
+        <Button type="primary" htmlType="submit" loading={logInLoading}>
           로그인
         </Button>
         <Link href="/signup">

@@ -36,14 +36,14 @@ export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
 export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
-const dummyUser =(data)=> {
+const dummyUser = (data = {
   ...data,
-  ...nickname: 'junhee',
+  nickname: "JUNHEE",
   id: 1,
   Posts: [],
   Followings: [],
   Followers: [],
-}
+});
 
 export const loginRequestAction = (data) => {
   return {
@@ -84,45 +84,43 @@ const reducer = (state = initialState, action) => {
     case LOG_OUT_REQUEST:
       return {
         ...state,
-        logOutLoading: true, 
+        logOutLoading: true,
         logOutDone: false,
         logOutError: null,
       };
     case LOG_OUT_SUCCESS:
       return {
         ...state,
-        logOutLoading: false, 
+        logOutLoading: false,
         logOutDone: true,
         me: null,
       };
     case LOG_OUT_FAILURE:
       return {
         ...state,
-        logOutLoading: false, 
+        logOutLoading: false,
         logOutError: action.error,
         me: null,
       };
-      case SIGN_UP_REQUEST:
-        return {
-          ...state,
-          signUpLoading: true, 
-          signUpDone: false,
-          signUpError: null,
-        };
-      case SIGN_UP_SUCCESS:
-        return {
-          ...state,
-          signUpLoading: false, 
-          signUpDone: true,
-          me: null,
-        };
-      case SIGN_UP_FAILURE:
-        return {
-          ...state,
-          signUpLoading: false, 
-          signUpError: action.error,
-          me: null,
-        };
+    case SIGN_UP_REQUEST:
+      return {
+        ...state,
+        signUpLoading: true,
+        signUpDone: false,
+        signUpError: null,
+      };
+    case SIGN_UP_SUCCESS:
+      return {
+        ...state,
+        signUpLoading: false,
+        signUpDone: true,
+      };
+    case SIGN_UP_FAILURE:
+      return {
+        ...state,
+        signUpLoading: false,
+        signUpError: action.error,
+      };
     default:
       return state;
   }

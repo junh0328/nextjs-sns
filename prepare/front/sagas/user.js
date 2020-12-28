@@ -4,10 +4,10 @@ import { all, delay, fork, put, takeLatest } from "redux-saga/effects";
 import {
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
-  LOG_IN_FAIULURE,
+  LOG_IN_FAILURE,
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
-  LOG_OUT_FAIULURE,
+  LOG_OUT_FAILURE,
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
   SIGN_UP_FAILURE,
@@ -33,7 +33,7 @@ function* logIn(action) {
     });
   } catch (err) {
     yield put({
-      type: LOG_IN_FAIULURE,
+      type: LOG_IN_FAILURE,
       error: err.response.data,
     });
   }
@@ -54,7 +54,7 @@ function* logOut() {
     });
   } catch (err) {
     yield put({
-      type: LOG_OUT_FAIULURE,
+      type: LOG_OUT_FAILURE,
       error: err.response.data,
     });
   }
@@ -94,7 +94,7 @@ function* watchSignUp() {
 }
 
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchLogOut)]);
+  yield all([fork(watchLogin), fork(watchLogOut), fork(watchSignUp)]);
 }
 
 /*

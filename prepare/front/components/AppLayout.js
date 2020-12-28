@@ -30,7 +30,7 @@ const SearchInput = styled(Input.Search)`
 `;
 
 const AppLayout = ({ children }) => {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const { me } = useSelector((state) => state.user);
 
   return (
     <div>
@@ -59,7 +59,7 @@ const AppLayout = ({ children }) => {
         {/* gutter: 컬럼 사이의 간격 */}
         {/* n/24라고 생각하기 24가 100% 이므로 md 6 은 25% */}
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {me ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}
