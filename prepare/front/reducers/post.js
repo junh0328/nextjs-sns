@@ -1,5 +1,6 @@
 import shortId from 'shortId';
 import produce from 'immer';
+import faker from 'faker';
 
 export const initialState = {
   mainPosts: [
@@ -60,6 +61,32 @@ export const initialState = {
   addCommentError: null,
 };
 
+initialState.mainPosts = initialState.mainPosts.concat(
+  Array(20)
+    .fill()
+    .map(() => ({
+      id: shortId.generate(),
+      User: {
+        id: shortId.generate(),
+        nickname: faker.name.findName(),
+      },
+      content: faker.lorem.paragraph(),
+      Images: [
+        {
+          src: faker.image.image(),
+        },
+      ],
+      Comments: [
+        {
+          User: {
+            id: shortId.generate(),
+            nickname: faker.name.findName(),
+          },
+          content: faker.lorem.sentence(),
+        },
+      ],
+    }))
+);
 // 액션 생성함수를 다음과 같이 상수로 지정한다면, reducer에서 오류 나는 것을 사전에 잡을 수 있다.
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';

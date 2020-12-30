@@ -262,6 +262,9 @@ export default wrapper.withRedux(withReduxSaga(NodeBird));
 
 ## 5.7 immer 라이브러리를 사용하여 불변성 관리하기
 
+- yarn add immer / npm i immer
+- import produce from 'immer';
+
 ```js
     case ADD_COMMENT_SUCCESS: {
       // action.data.content, postId, userId 가 들어옴 > ADD_POST_SUCCESS로 전달됨
@@ -300,6 +303,45 @@ const reducer = (state = initialState, action) => {
 
 - 위와 같이 화살표 함수 뒤에 바로 붙는 함수는 return이 생략된 것이다! 🌟
 - immer에서는 state 대신 draft라는 값을 사용하는데, 기존의 불변성의 법칙을 깨고 사용하더라도 immer가 이 draft를 감지하여 자동으로 다음 상태(state, 여기서는 draft)로 만들어준다.
+
+## 5.8 faker로 실감나는 더미데이터 만들기
+
+- 백엔드와 연동 전, 프론트 엔드만을 사용하여 포트폴리오를 만들 때 댓글 1, 댓글 2와 같은 데이터보다 실감나는 더미데이터를 받아올 수 있는 라이브러리입니다.
+- yarn add faker / npm i faker 를 통해 다운 받습니다.
+- import faker from 'faker'를 통해 임포트시켜 사용합니다.
+
+```js
+initialState.mainPosts = initialState.mainPosts.concat(
+  Array(20)
+    .fill()
+    .map(() => ({
+      id: shortId.generate(),
+      User: {
+        id: shortId.generate(),
+        nickname: faker.name.findName(),
+      },
+      content: faker.lorem.paragraph(),
+      Images: [
+        {
+          src: faker.image.image(),
+        },
+      ],
+      Comments: [
+        {
+          User: {
+            id: shortId.generate(),
+            nickname: faker.name.findName(),
+          },
+          content: faker.lorem.sentence(),
+        },
+      ],
+    }))
+);
+```
+
+- initialState의 mainPosts는 기존과 같은 키 값을 유지하여 만들어줍니다.
+- npm 에서 faker의 공식문서를 바탕으로 nickname(이름)과 image(트윗 이미지) sentence(댓글)를 구현해 주었습니다.
+- 🌟concat을 통해 데이터를 삽입시에는 항상 <b>initialState.mainPosts = initialState.mainPosts.concat()</b>와 같은 형태로 앞에 선언을 해줘야 concat이 적용됩니다.
 
 ## 🌟 개발 꿀팁(ui)
 
