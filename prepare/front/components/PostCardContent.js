@@ -1,6 +1,6 @@
-import React from "react";
-import Link from "next/link";
-import PropTypes from "prop-types";
+import React from 'react';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
 
 const PostCardContent = ({ postData }) => {
   //"첫 번째 게시글 #해시태그 #익스프레스" postData, 정규 표현식으로 해시태그가 포함된 문자를 뽑아낸다.

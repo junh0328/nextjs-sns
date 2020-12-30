@@ -1,8 +1,8 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import AppLayout from "../components/AppLayout";
-import PostCard from "../components/PostCard";
-import PostForm from "../components/PostForm";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import AppLayout from '../components/AppLayout';
+import PostCard from '../components/PostCard';
+import PostForm from '../components/PostForm';
 
 const Home = () => {
   const { me } = useSelector((state) => state.user); //user 리듀서에서 me 상태를 가져옴

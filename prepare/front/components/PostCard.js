@@ -1,18 +1,12 @@
-import { Avatar, Button, Card, Comment, List, Popover } from "antd";
-import React, { useCallback, useState } from "react";
-import PropTypes from "prop-types";
-import {
-  HeartOutlined,
-  MessageOutlined,
-  RetweetOutlined,
-  EllipsisOutlined,
-  HeartTwoTone,
-} from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import PostImages from "./PostImages";
-import CommentForm from "./CommentForm";
-import PostCardContent from "./PostCardContent";
-import { REMOVE_POST_REQUEST } from "../reducers/post";
+import { Avatar, Button, Card, Comment, List, Popover } from 'antd';
+import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
+import { HeartOutlined, MessageOutlined, RetweetOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import PostImages from './PostImages';
+import CommentForm from './CommentForm';
+import PostCardContent from './PostCardContent';
+import { REMOVE_POST_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
@@ -45,11 +39,7 @@ const PostCard = ({ post }) => {
         actions={[
           <RetweetOutlined key="retweet" />,
           liked ? (
-            <HeartTwoTone
-              twoToneColor="#eb2f96"
-              key="heart"
-              onClick={onToggleLike}
-            />
+            <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} />
           ) : (
             <HeartOutlined key="heart" onClick={onToggleLike} />
           ),
@@ -66,11 +56,7 @@ const PostCard = ({ post }) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button
-                      type="danger"
-                      loading={removePostLoading}
-                      onClick={onRemovePost}
-                    >
+                    <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>
                       삭제
                     </Button>
                   </>

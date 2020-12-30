@@ -3,8 +3,8 @@
   후에 index.js에서 import 시킨다.
 */
 
-import styled, { createGlobalStyle } from "styled-components";
-import { CloseOutlined } from "@ant-design/icons";
+import styled, { createGlobalStyle } from 'styled-components';
+import { CloseOutlined } from '@ant-design/icons';
 
 export const Overlay = styled.div`
   position: fixed;

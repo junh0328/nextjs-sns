@@ -4,18 +4,10 @@ ImagesZoom을 페이지가 아닌 폴더로 만들었다. (css 파일을 없앴�
 가장 중요한 파일을 index.js로 만들고 스타일 페이지를 styles.js로 만들어 import <->export 시킨다.
 */
 
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import Slick from "react-slick";
-import {
-  CloseBtn,
-  Global,
-  ImgWrapper,
-  Indicator,
-  Overlay,
-  SlickWrapper,
-  Header,
-} from "./styles";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import Slick from 'react-slick';
+import { CloseBtn, Global, ImgWrapper, Indicator, Overlay, SlickWrapper, Header } from './styles';
 
 const ImagesZoom = ({ images, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);

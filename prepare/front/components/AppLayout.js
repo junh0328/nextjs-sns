@@ -1,15 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Link from "next/Link";
-import { Menu, Input, Row, Col } from "antd";
-import "antd/dist/antd.css";
-import styled from "styled-components";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Link from 'next/Link';
+import { Menu, Input, Row, Col } from 'antd';
+import 'antd/dist/antd.css';
+import styled from 'styled-components';
 
-import UserProfile from "../components/UserProfile";
-import LoginForm from "../components/LoginForm";
+import UserProfile from '../components/UserProfile';
+import LoginForm from '../components/LoginForm';
 
-import { useSelector } from "react-redux";
-import { createGlobalStyle } from "styled-components";
+import { useSelector } from 'react-redux';
+import { createGlobalStyle } from 'styled-components';
 
 const Global = createGlobalStyle`
   .ant-row{
@@ -65,11 +65,7 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          <a
-            href="https://github.com/junh0328"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
+          <a href="https://github.com/junh0328" target="_blank" rel="noreferrer noopener">
             Made by JunHee
           </a>
         </Col>

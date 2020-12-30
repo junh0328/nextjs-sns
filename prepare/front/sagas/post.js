@@ -45,7 +45,7 @@ function* addPost(action) {
 }
 
 function removePostAPI(data) {
-  return axios.post("/api/remove", data);
+  return axios.delete("/api/remove", data);
 }
 
 function* removePost(action) {

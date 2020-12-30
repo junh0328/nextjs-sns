@@ -20,50 +20,41 @@ export const initialState = {
   loginData: {},
 };
 
-export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
-export const LOG_IN_SUCCESS = "LOG_IN_SUCCESS";
-export const LOG_IN_FAILURE = "LOG_IN_FAILURE";
+export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
+export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
+export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
 
-export const LOG_OUT_REQUEST = "LOG_OUT_REQUEST";
-export const LOG_OUT_SUCCESS = "LOG_OUT_SUCCESS";
-export const LOG_OUT_FAILURE = "LOG_OUT_FAILURE";
+export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
+export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
+export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 
-export const SIGN_UP_REQUEST = "SIGN_UP_REQUEST";
-export const SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS";
-export const SIGN_UP_FAILURE = "SIGN_UP_FAILURE";
+export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
+export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
 
-export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
-export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
-export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
+export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
+export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
+export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
-export const FOLLOW_REQUEST = "FOLLOW_REQUEST";
-export const FOLLOW_SUCCESS = "FOLLOW_SUCCESS";
-export const FOLLOW_FAILURE = "FOLLOW_FAILURE";
+export const FOLLOW_REQUEST = 'FOLLOW_REQUEST';
+export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
+export const FOLLOW_FAILURE = 'FOLLOW_FAILURE';
 
-export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
-export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
-export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
+export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST';
+export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS';
+export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 
 // 게시글을 썼다 지웠다를 할 때 생기는 상태(고유 id)를 관리하기 위해서 액션을 만들어 준다.
-export const ADD_POST_TO_ME = "ADD_POST_TO_ME;";
-export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
+export const ADD_POST_TO_ME = 'ADD_POST_TO_ME;';
+export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 const dummyUser = (data) => ({
   ...data,
-  nickname: "준희",
+  nickname: '준희',
   id: 1,
   Posts: [{ id: 1 }],
-  Followings: [
-    { nickname: "곽병현" },
-    { nickname: "김연후" },
-    { nickname: "최광훈" },
-  ],
-  Followers: [
-    { nickname: "곽병현" },
-    { nickname: "김연후" },
-    { nickname: "김승훈" },
-    { nickname: "최광록" },
-  ],
+  Followings: [{ nickname: '곽병현' }, { nickname: '김연후' }, { nickname: '최광훈' }],
+  Followers: [{ nickname: '곽병현' }, { nickname: '김연후' }, { nickname: '김승훈' }, { nickname: '최광록' }],
 });
 
 export const loginRequestAction = (data) => {
@@ -82,7 +73,7 @@ export const logoutRequestAction = () => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case LOG_IN_REQUEST:
-      console.log("reducer login");
+      console.log('reducer login');
       return {
         ...state,
         logInLoading: true,
