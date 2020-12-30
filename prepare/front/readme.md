@@ -304,11 +304,25 @@ const reducer = (state = initialState, action) => {
 - 위와 같이 화살표 함수 뒤에 바로 붙는 함수는 return이 생략된 것이다! 🌟
 - immer에서는 state 대신 draft라는 값을 사용하는데, 기존의 불변성의 법칙을 깨고 사용하더라도 immer가 이 draft를 감지하여 자동으로 다음 상태(state, 여기서는 draft)로 만들어준다.
 
+```js
+  case ADD_COMMENT_SUCCESS: {
+      const post = draft.mainPosts.find((v) => v.id === action.data.postId);
+      post.Comments.unshift(dummyComment(action.data.content));
+      draft.addCommentLoading = false;
+      draft.addCommentDone = true;
+      break;
+    }
+
+    - 기존의 ADD_COMMENT_SUCCESS문을 불변성을 지키기위해 사용했던 것에 비해, immer를 통해 불변성을 지키지 않고 코드를 처리하면 훨씬 더 간결하고 가독성이 좋게 만들어 줄 수 있다.
+    - 따라서 immer를 처음부터 도입한 후에 그에 맞춰 작업하는 것이 더 효율적일 수 있다.
+```
+
 ## 5.8 faker로 실감나는 더미데이터 만들기
 
 - 백엔드와 연동 전, 프론트 엔드만을 사용하여 포트폴리오를 만들 때 댓글 1, 댓글 2와 같은 데이터보다 실감나는 더미데이터를 받아올 수 있는 라이브러리입니다.
 - yarn add faker / npm i faker 를 통해 다운 받습니다.
 - import faker from 'faker'를 통해 임포트시켜 사용합니다.
+- 자세한 사용방법은 https://www.npmjs.com/package/faker 를 참고하면 됩니다.
 
 ```js
 initialState.mainPosts = initialState.mainPosts.concat(
@@ -342,6 +356,66 @@ initialState.mainPosts = initialState.mainPosts.concat(
 - initialState의 mainPosts는 기존과 같은 키 값을 유지하여 만들어줍니다.
 - npm 에서 faker의 공식문서를 바탕으로 nickname(이름)과 image(트윗 이미지) sentence(댓글)를 구현해 주었습니다.
 - 🌟concat을 통해 데이터를 삽입시에는 항상 <b>initialState.mainPosts = initialState.mainPosts.concat()</b>와 같은 형태로 앞에 선언을 해줘야 concat이 적용됩니다.
+
+## 5.9 인피니티 스크롤 구현하기!
+
+- useEffect()를 통해 탐지되는 상황을 감지하고 리렌더링 시킵니다.
+
+```js
+useEffect(() => {
+  function onScroll() {
+    console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
+
+    if (window.scrollY + document.documentElement.clientHeight === document.documentElement.scrollHeight) {
+      if (hasMorePost) {
+        dispatch({
+          type: LOAD_POSTS_REQUEST,
+        });
+      }
+    }
+  }
+  window.addEventListener('scroll', onScroll);
+  return () => {
+    window.removeEventListener('scroll', onScroll);
+  };
+}, [hasMorePost]);
+
+// scrollY: 얼마나 내렸는지
+// clientHeight : 화면 보이는 길이
+// scrollHeight: 총 길이
+
+// scrollY 와 clientHeight의 합이 scrollHeight의 값이 되므로 이 들을 비교하여 인피니티 스크롤을 구현할 수 있다.
+```
+
+- 하지만, 실무에서는 스크롤이 아예 맨밑까지 닿았을 때가 아닌 300px정도의 여유가 있을 때 데이터를 불러온다.
+- 또한 scroll 이벤트는 스크롤을 감지하여 발생하기 때문에 LOAD_POSTS_REQUEST에 대한 요청이 한번에 엄청 많이 일어날 수 있다.
+- 따라서 loadPostsLoading의 state를 통해 이미 불러오는 중이거나, 다 불러왔다면 request를 보내지 않도록 조건문에 넣어줘야 한다.
+
+```js
+useEffect(() => {
+  function onScroll() {
+    if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+      if (hasMorePost && !loadPostsLoading) {
+        dispatch({
+          type: LOAD_POSTS_REQUEST,
+        });
+      }
+    }
+  }
+  window.addEventListener('scroll', onScroll);
+  return () => {
+    window.removeEventListener('scroll', onScroll);
+  };
+}, [hasMorePost, loadPostsLoading]);
+
+...
+
+sagas/post.js
+...
+function* watchLoadPosts() {
+  yield throttle(2000, LOAD_POSTS_REQUEST, loadPosts);
+}
+```
 
 ## 🌟 개발 꿀팁(ui)
 
