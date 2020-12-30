@@ -58,7 +58,7 @@ import { Button, Input, Menu } from 'antd';
 
 useEffect(() => {
   axios
-    .get("/data")
+    .get('/data')
     .then(() => {
       setState(data);
     })
@@ -260,6 +260,47 @@ export default wrapper.withRedux(withReduxSaga(NodeBird));
 - 그래야만 바뀌는 것만 바뀌고 안바뀌는 것은 참조가 유지되어 메모리를 절약할 수 있기 때문이다.
 - 이 불변성을 유지하면서 편하게 쓸 수 있는 라이브러리가 immer 이다.
 
+## 5.7 immer 라이브러리를 사용하여 불변성 관리하기
+
+```js
+    case ADD_COMMENT_SUCCESS: {
+      // action.data.content, postId, userId 가 들어옴 > ADD_POST_SUCCESS로 전달됨
+
+      const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId);
+      const post = { ...state.mainPosts[postIndex] };
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
+
+      return {
+        ...state,
+        mainPosts,
+        addCommentLoading: false,
+        addCommentDone: true,
+      };
+    }
+```
+
+- 불변성을 지키기 위해서 reducer에서 사용한 코드이다.
+- 이 불변성 때문에 spread 연산자를 통해 객체의 값을 복사해 오는데 더 깊은 복사를 하게 될 수록 오류가 날 확률이 높아진다.
+- 따라서 immer를 통해 오류를 줄이고 더 보기 쉬운 코드로 만들어줄 수 있다.
+
+```js
+// 리듀서 안에서 사용할 때, 사용법은 다음과 같다.
+// 리듀서 : 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(단, 불변성은 지키면서)
+const reducer = (state = initialState, action) => {
+  return produce(state, (draft) => {
+    draft;
+  });
+};
+==
+ const reducer = (state = initialState, action) => produce(state, (draft) => {});
+
+```
+
+- 위와 같이 화살표 함수 뒤에 바로 붙는 함수는 return이 생략된 것이다! 🌟
+- immer에서는 state 대신 draft라는 값을 사용하는데, 기존의 불변성의 법칙을 깨고 사용하더라도 immer가 이 draft를 감지하여 자동으로 다음 상태(state, 여기서는 draft)로 만들어준다.
+
 ## 🌟 개발 꿀팁(ui)
 
 - 그리드를 만들 때는 가로(Row) 먼저 나누고 세로(Col)로 나눌 것
@@ -339,7 +380,7 @@ PostCard.propTypes = {
 
 ```js
 2.2;
-const next = { b: "c" };
+const next = { b: 'c' };
 const prev = { a: next };
 
 const next = { ...prev };
