@@ -11,6 +11,12 @@ import {
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
   SIGN_UP_FAILURE,
+  FOLLOW_REQUEST,
+  FOLLOW_SUCCESS,
+  FOLLOW_FAILURE,
+  UNFOLLOW_REQUEST,
+  UNFOLLOW_SUCCESS,
+  UNFOLLOW_FAILURE,
 } from '../reducers/user';
 
 function loginAPI(data) {
@@ -30,6 +36,7 @@ function* logIn(action) {
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: LOG_IN_SUCCESS,
       data: action.data,
+      // dispatch 에서 액션되었을때 넘겨받는 데이터
     });
   } catch (err) {
     yield put({
@@ -60,6 +67,50 @@ function* logOut() {
   }
 }
 
+function followAPI(data) {
+  return axios.post('/api/login', data);
+}
+
+function* follow(action) {
+  try {
+    yield delay(1000);
+    yield put({
+      type: FOLLOW_SUCCESS,
+      data: action.data,
+      /*
+        dispatch({
+        type: UNFOLLOW_REQUEST,
+        data: post.User.id,
+      });
+      여기서 data: action.data로 받아오는 데이터는 post.User.id 즉 포스트를 쓴 유저의 아이디이다.
+      */
+    });
+  } catch (err) {
+    yield put({
+      type: FOLLOW_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+function unfollowAPI(data) {
+  return axios.post('/api/login', data);
+}
+
+function* unfollow(action) {
+  try {
+    yield delay(1000);
+    yield put({
+      type: UNFOLLOW_SUCCESS,
+      data: action.data,
+    });
+  } catch (err) {
+    yield put({
+      type: UNFOLLOW_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function signUpAPI() {
   return axios.post('/api/signUp');
 }
@@ -80,6 +131,13 @@ function* signUp() {
     });
   }
 }
+function* watchFollow() {
+  yield takeLatest(FOLLOW_REQUEST, follow);
+}
+
+function* watchUnfollow() {
+  yield takeLatest(UNFOLLOW_REQUEST, unfollow);
+}
 
 function* watchLogin() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
@@ -94,7 +152,7 @@ function* watchSignUp() {
 }
 
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchLogOut), fork(watchSignUp)]);
+  yield all([fork(watchFollow), fork(watchUnfollow), fork(watchLogin), fork(watchLogOut), fork(watchSignUp)]);
 }
 
 /*

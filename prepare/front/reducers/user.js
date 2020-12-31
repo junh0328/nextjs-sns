@@ -1,6 +1,14 @@
 import produce from 'immer';
 
 export const initialState = {
+  followLoading: false, // 팔로우 시도 중
+  followDone: false, // 팔로우 완료
+  followError: null, // 팔로우 에러
+
+  unfollowLoading: false, //언팔로우 시도 중
+  unfollowDone: false, // 언팔로우 완료
+  unfollowError: null, // 언팔로우 에러
+
   logInLoading: false, // 로그인 시도 중
   logInDone: false, // 로그인 완료
   logInError: null, // 로그인 에러
@@ -74,7 +82,36 @@ export const logoutRequestAction = () => {
 
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
+    // const reducer = (state = initialState, action) => produce(state, (draft) => {}); 위와 같이 화살표 함수 뒤에 바로 붙는 함수는 return이 생략된 것이다! 🌟
     switch (action.type) {
+      case FOLLOW_REQUEST:
+        draft.followLoading = true;
+        draft.followDone = false;
+        draft.followError = action.error;
+        break;
+      case FOLLOW_SUCCESS:
+        draft.followLoading = false;
+        draft.me.Followings.push({ id: action.data });
+        draft.followDone = true;
+        break;
+      case FOLLOW_FAILURE:
+        draft.followLoading = false;
+        draft.followError = action.error;
+        break;
+      case UNFOLLOW_REQUEST:
+        draft.unfollowLoading = true;
+        draft.unfollowDone = false;
+        draft.unfollowError = action.error;
+        break;
+      case UNFOLLOW_SUCCESS:
+        draft.unfollowLoading = false;
+        draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data);
+        draft.unfollowDone = true;
+        break;
+      case UNFOLLOW_FAILURE:
+        draft.unfollowLoading = false;
+        draft.unfollowError = action.error;
+        break;
       case LOG_IN_REQUEST:
         draft.logInLoading = true;
         draft.logInDone = false;
