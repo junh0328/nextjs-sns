@@ -92,3 +92,22 @@ app.delete('/api/post', (req, res) => {
 - 넥스트에 장착된 웹팩이 이것을 바꿔주기 때문이다.
 - 하지만 노드는 웹팩을 쓰지 않기 때문에 require와 module.exports를 사용한다.
   (몇년 후에는 노드쪽도 import와 export default로 통일될 것을 예상한다.)
+
+# 3.시퀄라이즈 구현하가
+
+- 이미 깔려있다는 전제하에 까는 과정은 생략( 둘다 구글링으로 가능 windows/ mac)
+- 시퀄라이즈는 node와 mySQL을 연동하여 사용할 수 있도록 만든 npm에서 제공하는 모듈입니다.
+- 자바스크립트로 mySQL 언어를 배우지 않더라도 조작할 수 있게 도와주는 라이브러리입니다.
+- yarn add sequelize sequelize-cli mysql2 / npm i sequelize sequelize-cli mysql2 를 통해 다운받습니다.
+- mySQL과 node를 연결해주는 드라이버의 개념이 mysql2라고 보면 됩니다.
+
+```
+npx sequelize init 을 통해 sequelize를 실행해줍니다.
+
+📁 config
+📁 migrations
+📁 models
+📁 seeders
+
+폴더가 생성됩니다.
+```
