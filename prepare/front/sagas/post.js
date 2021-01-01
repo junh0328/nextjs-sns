@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { all, delay, fork, put, takeLatest, throttle } from 'redux-saga/effects';
-import shortId from 'shortid';
+import shortid from 'shortid';
 
 import {
   ADD_POST_REQUEST,
@@ -47,7 +47,7 @@ function* addPost(action) {
   try {
     delay(1000);
     // const result = yield call(addPostAPI, action.data);
-    const id = shortId.generate(); // 기존 포스트 성공 시에 넘겨받는 데이터에 id가 포함되어있지 않았으므로 add_post_success를 성공하면 생기는 데이터의 형식을 변경하여 id를 받아올 것이다.
+    const id = shortid.generate(); // 기존 포스트 성공 시에 넘겨받는 데이터에 id가 포함되어있지 않았으므로 add_post_success를 성공하면 생기는 데이터의 형식을 변경하여 id를 받아올 것이다.
     yield put({
       type: ADD_POST_SUCCESS,
       data: {

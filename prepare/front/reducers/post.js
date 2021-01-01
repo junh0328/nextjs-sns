@@ -1,4 +1,4 @@
-import shortId from 'shortId';
+import shortid from 'shortid';
 import produce from 'immer';
 import faker from 'faker';
 
@@ -28,9 +28,9 @@ export const generateDummyPost = (number) =>
   Array(number)
     .fill()
     .map(() => ({
-      id: shortId.generate(),
+      id: shortid.generate(),
       User: {
-        id: shortId.generate(),
+        id: shortid.generate(),
         nickname: faker.name.findName(),
       },
       content: faker.lorem.paragraph(),
@@ -42,7 +42,7 @@ export const generateDummyPost = (number) =>
       Comments: [
         {
           User: {
-            id: shortId.generate(),
+            id: shortid.generate(),
             nickname: faker.name.findName(),
           },
           content: faker.lorem.sentence(),
@@ -91,7 +91,7 @@ const dummyPost = (data) => ({
 });
 
 const dummyComment = (data) => ({
-  id: shortId.generate(),
+  id: shortid.generate(),
   content: data,
   User: {
     id: 1,

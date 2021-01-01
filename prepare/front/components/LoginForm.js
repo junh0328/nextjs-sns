@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Form, Button, Input } from 'antd';
-import Link from 'next/Link';
+import Link from 'next/link';
 import styled from 'styled-components';
 import useinput from '../hooks/useinput';
 import { useDispatch, useSelector } from 'react-redux';
