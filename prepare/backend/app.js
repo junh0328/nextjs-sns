@@ -1,4 +1,6 @@
 const express = require('express');
+const cors = require('cors');
+
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const db = require('./models');
@@ -17,6 +19,12 @@ db.sequelize
 // json(), urlencoded()라는 함수가 프론트에서 보낸 데이터를 req.body에 넣어주는 역할을 한다.
 // 미들웨어라는 것은 위에서부터 아래로 실행되기 때문에 반드시 get/post와 같은 요청보다 위에 있어야 한다.
 
+app.use(
+  cors({
+    origin: true,
+    credentials: false,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // form 으로 넘어오는 데이터 관리
 

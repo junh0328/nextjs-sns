@@ -221,3 +221,35 @@ npx sequelize db:create
 | 3XX |   리다이렉트    |
 | 4XX | 클라이언트 에러 |
 | 5XX |    서버 에러    |
+
+# CORS 문제 해결하기
+
+- 프론트엔드에서는 3000번 서버를 사용하고, 백엔드에서는 3065번 서버를 사용하고 있다.
+- 브라우저에서 보내는 요청 사항은 서버에서 바로 받아 처리할 수 있다.
+- 사용자의 브라우저에서 백엔드(3065) 서버로 axios.post 데이터를 전송하더라도 브라우저의 CORS 정책에 의해 막혀버린다.
+- 따라서 브라우저에서 프론트 서버에 요청을 보내고 프론트 서버에서 백엔드 서버로 요청을 보낸다면 이 문제를 해결할 수 있다.
+- 브라우저와 프론트 서버는 같은 도메인(3000버)에 있기 때문이다.
+- 이를 프록시(proxy) 방식이라고 한다. (CORS를 피해가는 방법 중 하나)
+
+```js
+const cors = require('cors');
+...
+app.use(cors());
+
+- app.js에서 cors 미들웨어를 사용하여 사용자의 요청을 받아올 수 있다.
+```
+
+- 또하나의 방법은 넘겨받는 라우터에서 헤더부분에 처리를 하는 것이다.
+
+```js
+await User.create({
+      email: req.body.email,
+      nickname: req.body.nickname,
+      password: hashedPassword,
+    });
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.status(201).send('ok');
+  }
+```
+
+- 위와 같이 201이라는 성공 메세지를 보내기 전에 setHeader()를 통해 Access-Control-Allow-Origin, '원래 프론트 주소'를 보내면 CORS 문제로 인해 브라우저에 의해 서버로의 요청이 막히는 일을 예방할 수 있다.

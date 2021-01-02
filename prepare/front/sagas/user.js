@@ -112,7 +112,7 @@ function* unfollow(action) {
 }
 
 function signUpAPI(data) {
-  return axios.post('http:localhost:3065/user', data);
+  return axios.post('http://localhost:3065/user', data);
 }
 
 function* signUp(action) {

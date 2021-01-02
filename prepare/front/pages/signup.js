@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import Router from 'next/router';
+
 import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 
@@ -14,7 +16,20 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (signUpDone) {
+      Router.push('/');
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    // sagas/user의 SIGN_UP_FAILURE로 넘어오는 백엔드의 실패요청을 받아 alert 처리해준다.
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
 
   const [email, onChangeemail] = useinput('');
   const [nickname, onChangeNickname] = useinput('');
