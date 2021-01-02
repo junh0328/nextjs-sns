@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { all, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
 
 import {
   LOG_IN_REQUEST,
@@ -111,14 +111,16 @@ function* unfollow(action) {
   }
 }
 
-function signUpAPI() {
-  return axios.post('/api/signUp');
+function signUpAPI(data) {
+  return axios.post('http:localhost:3065/user', data);
 }
 
-function* signUp() {
+function* signUp(action) {
+  // signup page에서 submit 버튼을 누를시(액션) 넘어오는 데이터(data)를 result에 저장한다. (action.data) 이 데이터를 동시에 signUpAPI로 보내 axio.post로 백엔드 서버에 라우팅된 주소로 데이터(data)를 넘겨준다.
+  // 데이터 안에는 { email, nickname, password } 가 들어있다.
   try {
-    delay(1000);
-    // const result = yield call(signUpAPI);
+    const result = yield call(signUpAPI, action.data);
+    console.log(result);
     yield put({
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: SIGN_UP_SUCCESS,
