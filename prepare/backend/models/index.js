@@ -6,6 +6,13 @@ const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config); //시퀄라이즈를 통해 해당 데이터를 연동한다.
 
+db.Comment = require('./comment')(sequelize, Sequelize);
+db.Hashtag = require('./hashtag')(sequelize, Sequelize);
+db.Image = require('./image')(sequelize, Sequelize);
+db.Post = require('./post')(sequelize, Sequelize);
+db.User = require('./user')(sequelize, Sequelize);
+
+// 반복문을 돌면서 테이블의 associate를 실행시켜주는 함수
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);

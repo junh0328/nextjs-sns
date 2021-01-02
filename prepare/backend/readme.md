@@ -111,3 +111,104 @@ npx sequelize init 을 통해 sequelize를 실행해줍니다.
 
 폴더가 생성됩니다.
 ```
+
+# 시퀄라이즈 모델링 및 관계 설정
+
+- npx sequelize init을 통해 sequelize를 사용하게 되면, models 폴더에 시퀄라이즈를 통해 연동할 데이터 테이블들을 만들어줘야 합니다.
+- 기본적으로 속성의 이름과 데이터타입이 필요합니다.
+
+```js
+module.exports = (sequelize, DataTypes) => {
+  const Image = sequelize.define(
+    'Image',
+    {
+      src: {
+        type: DataTypes.STRING(200),
+        allowNull: false,
+      },
+    },
+    {
+      charset: 'utf8',
+      collate: 'utf8_general_ci', // 한글 저장(utf8)
+    }
+  );
+  Image.associate = (db) => {};
+  return Image;
+};
+```
+
+- 'Image'는 images 테이블을 의미합니다.
+- 객체 형식으로 저장된 src가 images 테이블의 속성입니다. 여러개일 수 있습니다.
+- 속성에는 반드시 데이터 타입을 적어줘야 하며 주로 사용하는 데이터 타입은 다음과 같습니다.
+
+|     MySQL     |         시퀄라이즈          |        의미        |
+| :-----------: | :-------------------------: | :----------------: |
+|    VARCHAR    |           STRING            |       문자열       |
+|     TEXT      |            TEXT             | 텍스트(길이제한 x) |
+|    TINYINT    |           BOOLEAN           |    true/ false     |
+|      INT      |           INTEGER           |        정수        |
+|     FLOAT     |            FLOAT            |        실수        |
+|   DATETIME    |          DATETIME           |      현재시간      |
+|   NOT NULL    |          allowNull          |     빈 칸 여부     |
+|    UNIQUE     |           UNIQUE            |       중복 x       |
+| DEFAULT now() | defaultValue: Sequelize.Now |   현재 시간 표시   |
+
+- 또한 이렇게 관계형 데이터베이스 (RDBMS)를 사용하는 이유는 각 테이블(시퀄라이즈)의 관계 설정을 통해 테이블간의 관계를 나타낼 수 있기 때문입니다.
+- 사용자(user)가 여러 개의 게시글(post), 댓글(comment) 등등을 남길 수 있으므로 이러한 관계를 나타내어 시퀄라이즈를 사용합니다.
+- noSQL은 이러한 관계를 나타낼 수 없기 때문에 또 다른 테이블을 생성해야 합니다. (상황에 따라 맞춰 쓰자)
+
+## 🌟 RDBMS 관계 설립 🌟
+
+- node.js 교과서에서 발췌한 내용입니다.
+- https://thebook.io/080229/ch07/06/03/01/
+
+  | 값  |         서로 간의 관계          |
+  | :-: | :-----------------------------: |
+  | 1:1 |      hasOne <-> belongsTo       |
+  | 1:N |      hasMany <-> belongsTo      |
+  | N:M | belongsToMany <-> belongsToMany |
+
+<hr>
+
+|      값       |                             관계                              |
+| :-----------: | :-----------------------------------------------------------: |
+|    hasOne     | 서로 하나씩만 가진다. (유저 테이블과 유저 정보 테이블의 관계) |
+|    hasMany    |                  a가 b를 많이 가질 수 있다.                   |
+|   belongsTo   |                        b는 a에 속한다.                        |
+| belongsToMany |    a가 b를 많이 가질 수 있고, b또한 a를 많이 가질 수 있다.    |
+
+- 🌟 N:M 대대다 관계일 경우(post <-> hashtag) 🌟
+- sequelize가 posthashtag라는 🌟중간 관리 테이블🌟을 생성하여 이를 추적할 수 있도록 관리해줍니다.
+
+|    hashtag    |    posthashtag     |         post          |
+| :-----------: | :----------------: | :-------------------: |
+|       -       | hashtagid : postid |           -           |
+|    1. 노드    |       1 : 1        | 1. 안녕 #노드 #리액트 |
+|   2. 리액트   |       2 : 1        | 2. #노드 #익스프레스  |
+| 3. 익스프레스 |       1 : 2        |  3.#뷰 #노드 #리액트  |
+|     4. 뷰     |       3 : 2        |                       |
+|               |        ....        |                       |
+
+- hashtag를 검색하면 해당 hashtagid가 들어있는 post를 검색할 수 있게 된다.
+- 🌟through🌟
+
+```js
+db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });
+db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' });
+
+// 사용자와 게시글의 좋아요 관계
+// 위와 같이 through를 양쪽 테이블에 정해준다면 시퀄라이즈로 생성되는 테이블 명을 정해줄 수 있다.
+// belongsTo를 사용하면 기본적으로 이를 추적할 수 있는 id가 생기는데 이를 명확히 구분하기 위해 as: 'Likers'등 과 같이 표현하였다.
+```
+
+## 작성 후에 node로 실행하기
+
+- 관계설정이 완료되었다면 시퀄라이즈를 통해 db를 만들어줘야 한다. 명령어는 다음과 같다
+
+```
+npx sequelize db:create
+```
+
+- 성공하면 node app을 통해 서버와 연결해준다.
+- 🌟ERD를 통해 데이터베이스의 관계를 표식화하여 눈에 보이게 만들 수 있는다.
+- 강의에서는 간단한 관계들로 구성되어있기 때문에 따로 작성하지 않았지만, DataGrip이라는 웹사이트를 통해 도식화할 수 있다.

@@ -4,7 +4,7 @@
   "description": "# 1. 노드로 서버 구동하기",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app"
   },
   "author": "Junhee Lee",
   "license": "ISC",
@@ -14,5 +14,8 @@
     "mysql2": "^2.2.5",
     "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }
