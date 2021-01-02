@@ -27,3 +27,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (db) => {};
   return User;
 };
+
+/**
+ * STRING, TEXT, BOOLEAN, INTEGER, FLOAT, DATETIME
+ */
