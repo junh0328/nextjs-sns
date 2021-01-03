@@ -20,23 +20,16 @@ import {
 } from '../reducers/user';
 
 function loginAPI(data) {
-  return axios.post('/api/login', data);
+  return axios.post('/user/login', data);
   // 여기서 리턴된 값(action.data)이 logIn()함수에서 만든 result값으로 들어간다.
 }
 
 function* logIn(action) {
   try {
-    console.log('saga login');
-    yield delay(1000);
-    // const result = yield call(loginAPI, action.data);
-    // result는 loginAPI에서 리턴된 값(action.data)이다.
-    // 여기서 데이터를 넘겨받는 것을 실패할 경우 바로 catch문으로 넘어간다.
-    // call( )|함수를 실행한다. (동기 함수 호출), loginAPI의 값을 리턴 받을 때까지 기다렸다가 리턴 받은 값을 넣어준다. (블로킹을 한다.)
+    const result = yield call(loginAPI, action.data);
     yield put({
-      // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: LOG_IN_SUCCESS,
-      data: action.data,
-      // dispatch 에서 액션되었을때 넘겨받는 데이터
+      data: result.data,
     });
   } catch (err) {
     yield put({
@@ -47,7 +40,7 @@ function* logIn(action) {
 }
 
 function logOutAPI() {
-  return axios.post('/api/logout');
+  return axios.post('/user/logout');
 }
 
 function* logOut() {
@@ -68,7 +61,7 @@ function* logOut() {
 }
 
 function followAPI(data) {
-  return axios.post('/api/login', data);
+  return axios.post('/user/follow', data);
 }
 
 function* follow(action) {
@@ -93,7 +86,7 @@ function* follow(action) {
   }
 }
 function unfollowAPI(data) {
-  return axios.post('/api/login', data);
+  return axios.post('/user/unfollow', data);
 }
 
 function* unfollow(action) {
@@ -112,7 +105,7 @@ function* unfollow(action) {
 }
 
 function signUpAPI(data) {
-  return axios.post('http://localhost:3065/user', data);
+  return axios.post('/user', data);
 }
 
 function* signUp(action) {
@@ -124,7 +117,7 @@ function* signUp(action) {
     yield put({
       // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: SIGN_UP_SUCCESS,
-      // data: result.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({
@@ -154,7 +147,13 @@ function* watchSignUp() {
 }
 
 export default function* userSaga() {
-  yield all([fork(watchFollow), fork(watchUnfollow), fork(watchLogin), fork(watchLogOut), fork(watchSignUp)]);
+  yield all([
+    fork(watchFollow),
+    fork(watchUnfollow),
+    fork(watchLogin),
+    fork(watchLogOut),
+    fork(watchSignUp),
+  ]);
 }
 
 /*

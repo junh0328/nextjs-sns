@@ -213,7 +213,7 @@ npx sequelize db:create
 - 🌟ERD를 통해 데이터베이스의 관계를 표식화하여 눈에 보이게 만들 수 있는다.
 - 강의에서는 간단한 관계들로 구성되어있기 때문에 따로 작성하지 않았지만, DataGrip이라는 웹사이트를 통해 도식화할 수 있다.
 
-# response.status
+# http response.status
 
 | 값  |      의미       |
 | :-: | :-------------: |
@@ -253,3 +253,9 @@ await User.create({
 ```
 
 - 위와 같이 201이라는 성공 메세지를 보내기 전에 setHeader()를 통해 Access-Control-Allow-Origin, '원래 프론트 주소'를 보내면 CORS 문제로 인해 브라우저에 의해 서버로의 요청이 막히는 일을 예방할 수 있다.
+
+# 패스포트로 로그인하기
+
+- 로그인을 하기 위해서는 내 홈페이지에 회원가입을 통해 정보를 입력할 수도 있지만, 다른 계정의 정보를 이 웹사이트에 넘겨 저장할 수 있다.
+- 이를 관리하는 모듈이 패스포트 모듈이다.
+- 우리는 이메일을 통한 회원가입을 목표로 삼았기 때문에 npm i passport passport-local/ yarn add passport passport-local 로 관리할 것이다.

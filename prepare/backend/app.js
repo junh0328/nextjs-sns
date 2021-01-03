@@ -4,8 +4,10 @@ const cors = require('cors');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const db = require('./models');
-const app = express();
+const passportConfig = require('./passport');
 const port = 3065;
+
+const app = express();
 
 db.sequelize
   .sync()
@@ -18,6 +20,8 @@ db.sequelize
 // 하지만 라우팅 처리로 req.body로 요청한 데이터를 받기 위해서는 body를 받겠다는 명령어가 필요하다.
 // json(), urlencoded()라는 함수가 프론트에서 보낸 데이터를 req.body에 넣어주는 역할을 한다.
 // 미들웨어라는 것은 위에서부터 아래로 실행되기 때문에 반드시 get/post와 같은 요청보다 위에 있어야 한다.
+
+passportConfig(); // /passport/index 에서 exports한 전략을 실행시킴
 
 app.use(
   cors({
