@@ -1,12 +1,16 @@
 const express = require('express');
 const cors = require('cors');
-
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const dotenv = require('dotenv');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const db = require('./models');
 const passportConfig = require('./passport');
 const port = 3065;
 
+dotenv.config(); //.env를 사용할 수 있게 해주는 명령어
 const app = express();
 
 db.sequelize
@@ -31,6 +35,16 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // form 으로 넘어오는 데이터 관리
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(
+  session({
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.COOKIE_SECRET, // secret?
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
   res.send('hello express');

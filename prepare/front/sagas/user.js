@@ -22,6 +22,7 @@ import {
 function loginAPI(data) {
   return axios.post('/user/login', data);
   // 여기서 리턴된 값(action.data)이 logIn()함수에서 만든 result값으로 들어간다.
+  // 기존 localhost:3065로 axios를 통해 보내던 내용을 index에서 baseURL로 설정해주었다.
 }
 
 function* logIn(action) {
@@ -147,13 +148,7 @@ function* watchSignUp() {
 }
 
 export default function* userSaga() {
-  yield all([
-    fork(watchFollow),
-    fork(watchUnfollow),
-    fork(watchLogin),
-    fork(watchLogOut),
-    fork(watchSignUp),
-  ]);
+  yield all([fork(watchFollow), fork(watchUnfollow), fork(watchLogin), fork(watchLogOut), fork(watchSignUp)]);
 }
 
 /*

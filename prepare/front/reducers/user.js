@@ -119,7 +119,7 @@ const reducer = (state = initialState, action) =>
         break;
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
-        draft.me = dummyUser(action.data);
+        draft.me = action.data; //dummyUser(action.data)에서 실제 데이터로 변경
         draft.logInDone = true;
         break;
       /*

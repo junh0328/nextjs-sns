@@ -2,10 +2,11 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 
-const { User } = require('../models'); // index 안에 있는 models 테이블로 연결됨
+const { User } = require('../models');
 
 const router = express.Router();
 
+// 미들웨어를 확장하는 방법
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     // /passport/local 에서 쩐 전략을 실행하는 함수이다.
@@ -23,7 +24,8 @@ router.post('/login', (req, res, next) => {
         console.error(loginErr);
         return next(loginErr);
       }
-      return res.json(user); //사용자 정보를 프론트로 넘겨준다.
+      // res.setHeader('Cookie', 'cxlhy')
+      return res.status(200).json(user); //사용자 정보를 프론트로 넘겨준다. 쿠키로 why? 실제 데이터를 전부 넘겨주면 해킹에 노출되기 쉽기 때문에
     });
   })(req, res, next);
 });
@@ -57,6 +59,12 @@ router.post('/', async (req, res, next) => {
     console.error(error);
     next(error); // status 500, 서버쪽에서 처리하다가 에러가 나면 next()로 보내준다.
   }
+});
+
+router.post('/user/logout', (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.send('ok');
 });
 
 module.exports = router;
