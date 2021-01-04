@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Form, Button, Input } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
@@ -16,9 +16,16 @@ const FormWrapper = styled(Form)`
 const LoginForm = () => {
   const dispatch = useDispatch();
   // 더미(가짜) 데이터로 그냥 아이디와 비밀번호가 넘어오는 상태를 관리한다.
-  const { logInLoading } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
   const [email, onChangeEmail] = useinput('');
   const [password, onChangePassword] = useinput('');
+
+  useEffect(() => {
+    // 로그인 실패시, 왜 실패했는지 알려주기 위한 useEffect 추가
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
 
   const onSubmitForm = useCallback(() => {
     console.log(email, password);

@@ -46,12 +46,9 @@ function logOutAPI() {
 
 function* logOut() {
   try {
-    delay(1000);
-    // const result = yield call(logOutAPI);
+    yield call(logOutAPI);
     yield put({
-      // put() : redux의 dispatch() 함수와 같은 행동을 한다, 액션 객체를 실행 시킨다.
       type: LOG_OUT_SUCCESS,
-      // data: result.data,
     });
   } catch (err) {
     yield put({

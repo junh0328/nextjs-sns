@@ -2,12 +2,13 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 
-const { User } = require('../models');
+const { User, Post } = require('../models');
+const db = require('../models');
 
 const router = express.Router();
 
 // 미들웨어를 확장하는 방법
-router.post('/login', (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     // /passport/local 에서 쩐 전략을 실행하는 함수이다.
     if (err) {
@@ -25,7 +26,26 @@ router.post('/login', (req, res, next) => {
         return next(loginErr);
       }
       // res.setHeader('Cookie', 'cxlhy')
-      return res.status(200).json(user); //사용자 정보를 프론트로 넘겨준다. 쿠키로 why? 실제 데이터를 전부 넘겨주면 해킹에 노출되기 쉽기 때문에
+      const fullUserWidthouyPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: {
+          exclude: ['password'], // db에서 비밀번호 속성을 제외한 나머지 속성들만 받아오고 싶다.
+        },
+        include: [
+          {
+            model: Post, //시퀄라이즈 관계 형성시, hasMany의 관계로 post를 받기 때문에 me.Posts로 넘겨받는다.
+          },
+          {
+            model: User,
+            as: 'Followings',
+          },
+          {
+            model: User,
+            as: 'Followers',
+          },
+        ],
+      });
+      return res.status(200).json(fullUserWidthouyPassword); //사용자 정보를 프론트로 넘겨준다. 쿠키로 why? 실제 데이터를 전부 넘겨주면 해킹에 노출되기 쉽기 때문에
     });
   })(req, res, next);
 });

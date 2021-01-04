@@ -81,6 +81,7 @@ useEffect(() => {
 
 - redux thunk는 리덕스의 미들웨어이다.
 - 미들웨어란 리덕스의 기능을 향상시켜주는 역할을 한다. (원래 리덕스에 없던 기능을 추가해준다.)
+- 또한 액션을 디스패치했을 때 리듀서에서 이를 처리하기에 앞서 사전에 지정된 작업들을 실행한다.
 - 그 중 redux-thunk는 리덕스가 비동기 액션을 디스패치할 수 있게 만들어주는 미들웨어이다.
 - https://github.com/reduxjs/redux-thunk redux-thunk 공식 문서
 
@@ -120,6 +121,7 @@ function createThunkMiddleware(extraArgument) {
       return action(dispatch, getState);
     }
     // 액션을 실행하기 전에 실행하고자 하는 함수들을 위에 적는다.
+
     return next(action);
 
   };
@@ -132,6 +134,8 @@ export default thunk;
 
 ```
 
+- next() 파라미터는 함수 형태이며, store.dispatch와 비슷한 역할을 합니다.
+- 하지만 큰 차이점이 있는데, next(action)을 호출하면 그다음 처리해야 할 미들웨어에게 액션을 넘겨주고, 만약 그다음 미들웨어가 없다면 리듀서에게 액션을 넘겨준다는 것입니다.
 - 액션은 원래 객체이지만, thunk에서는 액션을 함수로 둘 수 있다.
 - 액션이 함수인 경우, 액션이 지연 함수이기 때문에 해당 리턴되는 액션 나중에 실행할 수 있다.
 
