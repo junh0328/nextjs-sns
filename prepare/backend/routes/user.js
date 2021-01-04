@@ -3,12 +3,13 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 
 const { User, Post } = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewars');
 const db = require('../models');
 
 const router = express.Router();
 
 // 미들웨어를 확장하는 방법
-router.post('/login', async (req, res, next) => {
+router.post('/login', isNotLoggedIn, async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     // /passport/local 에서 쩐 전략을 실행하는 함수이다.
     if (err) {
@@ -51,7 +52,7 @@ router.post('/login', async (req, res, next) => {
 });
 //POST /user/login 으로 합의
 
-router.post('/', async (req, res, next) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
   try {
     const exUser = await User.findOne({
       // email 중복 조건
@@ -81,7 +82,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.post('/user/logout', (req, res, next) => {
+router.post('/logout', isLoggedIn, (req, res, next) => {
   req.logout();
   req.session.destroy();
   res.send('ok');

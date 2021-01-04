@@ -265,7 +265,7 @@ await User.create({
 
 - 패스포트 로그인을 할 때, 패스포트가 사용자의 정보를 저장하기 위해서 세션을 활용한다.
 - 쿠키와 세션이 필요한 이유?
-- 로그인을 하면 브라우저와 서버가 같은 정보를 들고 있어야 하는데, 브라우저 서버와 백엔드 서버는 다른 도메인(3000 <-> 3065)를 가지고 있기 때문에 같은 정보를 가질 수 없다.
+- 로그인을 후 데이터를 송수신하기 위해서는 두 서버가 같은 정보를 들고 있어야 하는데, 브라우저 서버와 백엔드 서버는 다른 도메인(3000 <-> 3065)를 가지고 있기 때문에 같은 정보를 가질 수 없다.
 - 따라서 브라우저에 요청에 따라 서버에서 처리된 사용자의 대이터가 랜덤한 토큰값(ex) cxlby!Scsa)을 가지는 쿠키형식으로 저장된다.
 - 또한 쿠키형식으로 데이터를 넘겨주기 때문에 헤커들의 데이터 해킹 보안 측면에서 유리하다. (쿠키 데이터를 가지고 사용자의 데이터를 추측하기 어렵기 때문)
 - 사용자(브라우저)에게는 쿠키를 넘겨주고 서버에서는 쿠키에 따른 세션(실제 사용자의 데이터 [email, password])값을 갖고있다.
@@ -297,3 +297,68 @@ await User.create({
 - B 끝에 패스포트 로그인을 실행하는데 이를 통과할시 passport/index에서 serializeUser((user, done))을 통해 user.id와 쿠키를 백엔드 서버에서 저장하게 된다. (나머지는 db에 저장해 두었다가 필요할 때 역직렬화를 통해 db에서 불러옴)
 - console > network > login > Set-Cookies : connect.sid='' 를 통해 실제 쿠키와 id를 찾아볼 수 있다.
 - B 로그인을 성공하고 나면 백엔드 서버에는 user.id와 connect.sid 를 가지게 되는데 그 다음 요청부터는 이 쿠키와 id를 통해 db에서 데이터를 가져오게 된다.
+
+# 🌟미들웨어로 라우터 검사하기
+
+- 현재까지 router를 통해 주소로 넘어오는 데이터를 처리해주는 작업을 진행하였다.
+- 하지만 현재 상황에서는 로그인이 된 상태에서도 '/login' 주소에 접근하면 에러가 발생하고
+- 로그인되지 않은 상태에서 '/logout'을 통해 에러를 발생시킬 수 있다.
+- 이를 해결하기 위해서 미들웨어를 통해 라우터를 검사하는 방법을 사용한다.
+
+```js
+exports.isNotLoggedIn = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    next();
+  } else {
+    res.status(401).send('로그인하지 않은 사용자만 접근 가능합니다.');
+  }
+};
+```
+
+- passport 모듈의 isAuthenticated()라는 함수를 사용하여, 로그인 여부를 확인한다.
+- front 단의 'me' 와 같은 역할을 한다.
+
+```js
+import {isLoggedIn} from './middlewars';
+
+...
+
+router.post('/logout', isLoggedIn, (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.send('ok');
+});
+```
+
+- middlewares.js에서 export 시킨 함수(isLoggedIn) 을 불러오고 필요한 라우팅 처리 함수에 넣어준다.
+
+## 🌟next() 바로알기
+
+- 노드는 코드를 위에서부터 아래로 왼쪽에서 오른쪽으로 진행한다.
+- 띠리사 '/logout' 함수를 요구받았을 때, isLoggedIn으로 먼저 넘어간다.
+
+```js
+router.post('/logout', isLoggedIn, (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.send('ok');
+});
+```
+
+- next의 사용방법
+- 1 next() 함수안에 어떠한 변수라도 넣으면 에러를 처리하러 간다.
+- 1.1 직접 적어주지 않아도, 내부적으로 존재하기 때문에 알아서 처리해준다.
+- 2 next() 괄호안에 아무것도 넣지 않을 경우 다음 미들웨어를 처리하러 간다.
+- next의 사용방법과 같이 next()괄호 안에 아무것도 없으므로 다음 미들웨어로 넘어가 req.logout()을 실행하게 된다.
+
+```js
+exports.isNotLoggedIn = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    next();
+  } else {
+    res.status(401).send('로그인하지 않은 사용자만 접근 가능합니다.');
+  }
+};
+```
+
+- next 함수의 파라미터가 아무 것도 없으므로 다시 '/logout'함수로 되돌아 가 나머지 코드를 진행한다.
