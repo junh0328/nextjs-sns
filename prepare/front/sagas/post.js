@@ -40,7 +40,7 @@ function* loadPosts(action) {
 }
 
 function addPostAPI(data) {
-  return axios.post('/post', { content: data });
+  return axios.post('/post', { content: data }); // postForm에서 addPost(text)로 받았기 때문에 이를 서버에 전달해 주기 위해서 넘겨받은 text > data를 content라는 속성에 넣어주었다.
 }
 
 function* addPost(action) {
@@ -89,16 +89,15 @@ function* removePost(action) {
 }
 
 function addCommentAPI(data) {
-  return axios.post('/api/post/${data.postId}/comment', data);
+  return axios.post('/post/${data.postId}/comment', data); // POST /post/1/comment
 }
 
 function* addComment(action) {
   try {
-    // const result = yield call(addCommentAPI, action.data);
-    delay(1000);
+    const result = yield call(addCommentAPI, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({

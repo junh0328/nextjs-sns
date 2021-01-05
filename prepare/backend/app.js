@@ -29,8 +29,8 @@ passportConfig(); // /passport/index 에서 exports한 전략을 실행시킴
 
 app.use(
   cors({
-    origin: true,
-    credentials: false,
+    origin: 'http://localhost:3000', //또는 origin: true,
+    credentials: true,
   })
 );
 app.use(express.json());

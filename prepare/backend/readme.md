@@ -362,3 +362,45 @@ exports.isNotLoggedIn = (req, res, next) => {
 ```
 
 - next 함수의 파라미터가 아무 것도 없으므로 다시 '/logout'함수로 되돌아 가 나머지 코드를 진행한다.
+
+# credentials로 쿠키 공휴가ㅣ
+
+- 현재까지 프로그래밍을 완료했다면, 로그인을 하고 댓글을 달거나, 트윗을 남기고 싶을 것이다.
+- 하지만, 브라우저의 서버와 백엔드 서버의 도메인이 다른 관계로 쿠키를 서로 공유하지 못한다.(전달되지 않는다.)
+- 도메인이 다르면 쿠키가 전달이 안되고, 쿠기가 전달이 되지 않으면 백엔드에서 그 요청을 누가 보냈는 지 알 방법이 없다.
+- 이를 해결하기 위해 cors 모듈을 활용할 것이다.
+
+```js
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  })
+);
+```
+
+- cors 에서 credentials 속성을 true로 바꾸면 해당 문제를 해결할 수 있다.
+- 기본 값은 credentials: false 이먀, 다른 도메인에서 쿠키를 같이 공유하기 위해서는 true 값이 요구된다.
+- 또한 프론트 사가에서 보내는 요청 사항에도 작업이 필요한데 이는 다음과 같다.
+
+```js
+function addPostAPI(data) {
+  return axios.post('/post', { content: data });
+}
+
+>>>
+
+function addPostAPI(data) {
+  return axios.post('/post', { content: data }, { withCredentials: true });
+}
+```
+
+- { withCredentials: true }라는 속성을 넣어주어 axios를 통해 데이터를 서버에 넘겨줄 때 쿠키 또한 공유하겠다는 선언이 필요하다.
+- 하지만 모든 요청에서 공통적으로 보내는 요청이 되기 때문에 sagas/index에서 이 요청사항을 한 번에 컨트롤하면 좋다.
+
+```js
+axios.defaults.baseURL = 'http://localhost:3065';
+axios.defaults.withCredentials = true;
+```
+
+- 위처럼 공통되는 sagas/index 폴더에서 axios의 공통 사항에 대해 미리 선언해주면 다른 파일에서 해당 속성을 추가하지 않아도 된다.

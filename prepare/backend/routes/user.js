@@ -27,7 +27,7 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
         return next(loginErr);
       }
       // res.setHeader('Cookie', 'cxlhy')
-      const fullUserWidthouyPassword = await User.findOne({
+      const fullUserWidthoutPassword = await User.findOne({
         where: { id: user.id },
         attributes: {
           exclude: ['password'], // db에서 비밀번호 속성을 제외한 나머지 속성들만 받아오고 싶다.
@@ -46,7 +46,7 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
           },
         ],
       });
-      return res.status(200).json(fullUserWidthouyPassword); //사용자 정보를 프론트로 넘겨준다. 쿠키로 why? 실제 데이터를 전부 넘겨주면 해킹에 노출되기 쉽기 때문에
+      return res.status(200).json(fullUserWidthoutPassword); //사용자 정보를 프론트로 넘겨준다. 쿠키로 why? 실제 데이터를 전부 넘겨주면 해킹에 노출되기 쉽기 때문에
     });
   })(req, res, next);
 });

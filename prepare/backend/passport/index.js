@@ -9,8 +9,9 @@ module.exports = () => {
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await User.findOne({ where: { id } });
-      done(null, user); //req.user
+      const user = await User.findOne({ where: { id } }); // User.id
+      done(null, user);
+      //req.user > 역직렬화를 통해 req.user.id를 받아서 관리한다.  why? 이미 로그인한 회원은 db에서 정보를 가지고 있으므로
     } catch (error) {
       console.error(error);
       done(error);
