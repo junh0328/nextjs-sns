@@ -8,6 +8,43 @@ const db = require('../models');
 
 const router = express.Router();
 
+router.get('/', async (req, res, next) => {
+  //GET /user
+  try {
+    if (req.user) {
+      const fullUserWidthoutPassword = await User.findOne({
+        where: { id: req.user.id },
+        attributes: {
+          exclude: ['password'], // db에서 비밀번호 속성을 제외한 나머지 속성들만 받아오고 싶다.
+        },
+        include: [
+          {
+            model: Post, //시퀄라이즈 관계 형성시, hasMany의 관계로 post를 받기 때문에 me.Posts로 넘겨받는다.
+            attributes: ['id'],
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followings',
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followers',
+            attributes: ['id'],
+          },
+        ],
+      });
+      res.status(200).json(fullUserWidthoutPassword);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
 // 미들웨어를 확장하는 방법
 router.post('/login', isNotLoggedIn, async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -35,14 +72,17 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
         include: [
           {
             model: Post, //시퀄라이즈 관계 형성시, hasMany의 관계로 post를 받기 때문에 me.Posts로 넘겨받는다.
+            attributes: ['id'],
           },
           {
             model: User,
             as: 'Followings',
+            attributes: ['id'],
           },
           {
             model: User,
             as: 'Followers',
+            attributes: ['id'],
           },
         ],
       });

@@ -1,6 +1,10 @@
 import produce from 'immer';
 
 export const initialState = {
+  loadMyUserInfoLoading: false, // 유저 정보 가져오기 시도 중
+  loadMyUserInfoDone: false, // 유저 정보 가져오기 완료
+  loadMyUserInfoError: null, // 유저 정보 가져오기 에러
+
   followLoading: false, // 팔로우 시도 중
   followDone: false, // 팔로우 완료
   followError: null, // 팔로우 에러
@@ -29,6 +33,9 @@ export const initialState = {
   signUpData: {},
   loginData: {},
 };
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -84,6 +91,21 @@ const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
     // const reducer = (state = initialState, action) => produce(state, (draft) => {}); 위와 같이 화살표 함수 뒤에 바로 붙는 함수는 return이 생략된 것이다! 🌟
     switch (action.type) {
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyUserLoading = true;
+        draft.loadMyUserDone = false;
+        draft.loadMyUserError = action.error;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyUserLoading = false;
+        draft.me = action.data;
+        draft.loadMyUserDone = true;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyUserLoading = false;
+        draft.loadMyUserError = action.error;
+        break;
+
       case FOLLOW_REQUEST:
         draft.followLoading = true;
         draft.followDone = false;
