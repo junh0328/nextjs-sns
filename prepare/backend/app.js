@@ -56,12 +56,8 @@ app.get('/', (req, res) => {
   res.send('hello express');
 });
 
-app.get('/api', (req, res) => {
-  res.send('hello api');
-});
-
-app.use('/post', postRouter); //postRouter에서 /post를 공통으로 받기 때문에 미리 공통된 '/post'를 뽑아줬다.
 app.use('/posts', postsRouter); // 단수와 복수를 철저저히 분리하여 관리한다. (posts는 post, 게시물 여러개를 관리하는 것을 의미함)
+app.use('/post', postRouter); //postRouter에서 /post를 공통으로 받기 때문에 미리 공통된 '/post'를 뽑아줬다.
 app.use('/user', userRouter); // Post방식 /user/ >> front redux-saga의 axios.post('http:localhost:3065/user'); 와 일치
 
 app.listen(port, () => {

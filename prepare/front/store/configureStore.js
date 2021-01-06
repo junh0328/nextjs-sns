@@ -1,10 +1,10 @@
-import { createWrapper } from "next-redux-wrapper";
-import { applyMiddleware, compose, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import createSagaMiddleware from "redux-saga";
+import { createWrapper } from 'next-redux-wrapper';
+import { applyMiddleware, compose, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import createSagaMiddleware from 'redux-saga';
 
-import reducer from "../reducers";
-import rootSaga from "../sagas";
+import reducer from '../reducers';
+import rootSaga from '../sagas';
 
 const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
   console.log(action);
@@ -19,7 +19,7 @@ const configureStore = () => {
   const middlewares = [sagaMiddleware, loggerMiddleware];
   // redux의 기능을 확장한다는 의미로 enhancer라는 변수를 만들어주었다.
   const enhancer =
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV === 'production'
       ? compose(applyMiddleware(...middlewares)) // 배포용
       : composeWithDevTools(applyMiddleware(...middlewares)); //개발용, devTools를 사용하여 히스토리 추적 및 분석 가능
   const store = createStore(reducer, enhancer);
@@ -28,7 +28,7 @@ const configureStore = () => {
 };
 
 const wrapper = createWrapper(configureStore, {
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === 'development',
 });
 
 export default wrapper;
