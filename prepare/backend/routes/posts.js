@@ -32,6 +32,11 @@ router.get('/', async (req, res, next) => {
             },
           ],
         },
+        {
+          model: User, // 좋아요 누른 사람
+          as: 'Likers',
+          attributes: ['id'],
+        },
       ],
     }); // 지금까지 작성한 모든 게시글을 보여줄 것.
     console.log(posts);

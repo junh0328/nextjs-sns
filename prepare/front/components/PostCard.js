@@ -6,17 +6,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
-import { REMOVE_POST_REQUEST } from '../reducers/post';
+import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const { removePostLoading } = useSelector((state) => state.post);
-  const [liked, setLiked] = useState(false);
+
   const [commentFormOpened, setCommentFormOpened] = useState(false);
-  // onToggleLike 토글 기능을 통해 true <-> false를 이용하는 함수
-  const onToggleLike = useCallback(() => {
-    setLiked((prev) => !prev);
+  // onLike 토글 기능을 통해 true <-> false를 이용하는 함수
+
+  const onLike = useCallback(() => {
+    dispatch({
+      type: LIKE_POST_REQUEST,
+      data: post.id, // user.id는 백엔드의 req.user에 들어있으므로(deserializeUser에 의해 역직렬화됨) 넣어줄 필요 없다.
+    });
+  }, []);
+
+  const onUnlike = useCallback(() => {
+    dispatch({
+      type: UNLIKE_POST_REQUEST,
+      data: post.id,
+    });
   }, []);
 
   const onToggleComment = useCallback(() => {
@@ -31,7 +42,7 @@ const PostCard = ({ post }) => {
   }, []);
 
   const id = useSelector((state) => state.user.me?.id);
-  // const id = useSelector((state) => state.user.me ? state.user.me.id); 옵셔널 체이닝 연산자를 통해 불필요한 코드를 줄여주었다.
+  const liked = post.Likers.find((v) => v.id === id);
 
   return (
     <div style={{ marginBottom: 20 }}>
@@ -39,21 +50,13 @@ const PostCard = ({ post }) => {
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <RetweetOutlined key="retweet" />,
-          liked ? (
-            <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} />
-          ) : (
-            <HeartOutlined key="heart" onClick={onToggleLike} />
-          ),
+          liked ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} /> : <HeartOutlined key="heart" onClick={onLike} />,
 
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
             key="more"
             content={
               <Button.Group>
-                {/*   
-                    내가 쓴 글이명 수정 /삭제 버튼이 보이고, 남이 쓴 글이면 신고버튼이 더보기에 보이도록 구성해야함
-                    id와 내가 쓴 글의 아이디와 같으면 수정/삭제 다르면 신고 버튼을 보여줄 수 있도록 만듬
-                */}
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
@@ -89,11 +92,7 @@ const PostCard = ({ post }) => {
             dataSource={post.Comments || []}
             renderItem={(item) => (
               <li>
-                <Comment
-                  author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
-                  content={item.content}
-                />
+                <Comment author={item.User.nickname} avatar={<Avatar>{item.User.nickname[0]}</Avatar>} content={item.content} />
               </li>
             )}
           />
@@ -111,6 +110,7 @@ PostCard.propTypes = {
     createdAt: PropTypes.string,
     Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),
+    Likers: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
 };
 

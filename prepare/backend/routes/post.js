@@ -80,6 +80,38 @@ router.post(`/:postId/comment`, isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.patch(`/:postid/like`, isLoggedIn, async (req, res, next) => {
+  // PATCH /post/1/like
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    if (!post) {
+      return res.status(403).send('게시글이 존재하지 않습니다.');
+    }
+    // post가 있다면, models/post의 관계에 따라 나타낸다
+    await post.addLikers(req.user.id);
+    res.json({ PostId: post.id, UserId: req.user.id }); // sagas/post 에서 likePost 의 data : result.data로 PostId와 UserId가 넘어간다.
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+router.delete(`/:postid/like`, isLoggedIn, async (req, res, next) => {
+  // DELETE /post/1/like
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    if (!post) {
+      return res.status(403).send('게시글이 존재하지 않습니다.');
+    }
+    // post가 있다면, models/post의 관계에 따라 나타낸다
+    await post.removeLikers(req.user.id);
+    res.json({ PostId: post.id, UserId: req.user.id }); // sagas/post 에서 likePost 의 data : result.data로 PostId와 UserId가 넘어간다.
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
 router.delete('/', isLoggedIn, (req, res) => {
   //DELETE /post
   res.json({
