@@ -23,12 +23,20 @@ router.post('/', isLoggedIn, async (req, res, next) => {
         },
         {
           model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+            },
+          ],
         },
         {
           model: User,
+          attributes: ['id', 'nickname'],
         },
       ],
     });
+    console.log(req.user);
     res.status(201).json(fullPost); // json(post)를 통해 front로 돌려줌 >> result.data
   } catch (error) {
     console.error(error);
@@ -48,11 +56,20 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
     }
     const comment = await Comment.create({
       content: req.body.content,
-      PostId: req.params.postId,
+      PostId: parseInt(req.params.postId, 10),
       // /:postId라는 파라미터를 동적으로 받아와 실행하기 때문에 req.params를 사용한다.
       UserId: req.user.id,
     });
-    res.status(201).json(comment); // json(post)를 통해 front로 돌려줌 >> result.data
+    const fullComment = await Comment.findOne({
+      where: { id: comment.id },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
+      ],
+    });
+    res.status(201).json(fullComment); // json(post)를 통해 front로 돌려줌 >> result.data
   } catch (error) {
     console.error(error);
     next(error);

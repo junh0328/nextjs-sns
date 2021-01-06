@@ -12,6 +12,7 @@ router.get('/', async (req, res, next) => {
   //GET /user
   try {
     if (req.user) {
+      //로그인을 하지 않은 상태에서는 req.user가 없으므로, 에러가 날 경우를 대비해서 if문으로 감싸준다.
       const fullUserWidthoutPassword = await User.findOne({
         where: { id: req.user.id },
         attributes: {
@@ -20,8 +21,7 @@ router.get('/', async (req, res, next) => {
         include: [
           {
             model: Post, //시퀄라이즈 관계 형성시, hasMany의 관계로 post를 받기 때문에 me.Posts로 넘겨받는다.
-            attributes: ['id'],
-            attributes: ['id'],
+            attributes: ['id'], // 필요한 데이터인 id만 가져온다. why? id를 통해 나중에 필요해질 때 참고하여 가져올 수 있기 때문에, 서버로부터 프론트에게 필요한 데이터만 보내주는 과정이다.₩
           },
           {
             model: User,
@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
       });
       res.status(200).json(fullUserWidthoutPassword);
     } else {
-      res.status(200).json(null);
+      res.status(200).json(null); // req.user가 없을 경우, null 즉 사용자의 데이터가 없는 로그인 form을 보여준다.
     }
   } catch (error) {
     console.error(error);

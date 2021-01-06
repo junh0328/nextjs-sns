@@ -65,15 +65,6 @@ export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME;';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
-const dummyUser = (data) => ({
-  ...data,
-  nickname: '준희',
-  id: 1,
-  Posts: [{ id: 1 }],
-  Followings: [{ nickname: '곽병현' }, { nickname: '김연후' }, { nickname: '최광훈' }],
-  Followers: [{ nickname: '곽병현' }, { nickname: '김연후' }, { nickname: '김승훈' }, { nickname: '최광록' }],
-});
-
 export const loginRequestAction = (data) => {
   return {
     type: LOG_IN_REQUEST,

@@ -4,8 +4,12 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
+
+const postsRouter = require('./routes/posts');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
+
 const db = require('./models');
 const passportConfig = require('./passport');
 const port = 3065;
@@ -26,6 +30,8 @@ db.sequelize
 // 미들웨어라는 것은 위에서부터 아래로 실행되기 때문에 반드시 get/post와 같은 요청보다 위에 있어야 한다.
 
 passportConfig(); // /passport/index 에서 exports한 전략을 실행시킴
+
+app.use(morgan('dev'));
 
 app.use(
   cors({
@@ -54,15 +60,8 @@ app.get('/api', (req, res) => {
   res.send('hello api');
 });
 
-app.get('/posts', (req, res) => {
-  res.json([
-    { id: 1, content: 'hello' },
-    { id: 2, content: 'hello2' },
-    { id: 3, content: 'hello3' },
-  ]);
-});
-
 app.use('/post', postRouter); //postRouter에서 /post를 공통으로 받기 때문에 미리 공통된 '/post'를 뽑아줬다.
+app.use('/posts', postsRouter); // 단수와 복수를 철저저히 분리하여 관리한다. (posts는 post, 게시물 여러개를 관리하는 것을 의미함)
 app.use('/user', userRouter); // Post방식 /user/ >> front redux-saga의 axios.post('http:localhost:3065/user'); 와 일치
 
 app.listen(port, () => {

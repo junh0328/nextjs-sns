@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { all, call, delay, fork, put, takeLatest, throttle } from 'redux-saga/effects';
-import shortid from 'shortid';
 
 import {
   ADD_POST_REQUEST,
@@ -15,21 +14,20 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   LOAD_POSTS_FAILURE,
-  generateDummyPost,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
-function loadPostSAPI(data) {
-  return axios.get('/api/posts', data);
+function loadPostsAPI(data) {
+  return axios.get('/posts', data);
 }
 
 function* loadPosts(action) {
   try {
-    // const result = yield call(loadPostAPI, action.data);
+    const result = yield call(loadPostsAPI, action.lastId);
     delay(1000);
     yield put({
       type: LOAD_POSTS_SUCCESS,
-      data: generateDummyPost(10),
+      data: result.data,
     });
   } catch (err) {
     yield put({
@@ -46,7 +44,6 @@ function addPostAPI(data) {
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data);
-    const id = shortid.generate(); // 기존 포스트 성공 시에 넘겨받는 데이터에 id가 포함되어있지 않았으므로 add_post_success를 성공하면 생기는 데이터의 형식을 변경하여 id를 받아올 것이다.
     yield put({
       type: ADD_POST_SUCCESS,
       data: result.data,
@@ -100,6 +97,7 @@ function* addComment(action) {
       data: result.data,
     });
   } catch (err) {
+    console.error(err);
     yield put({
       type: ADD_COMMENT_FAILURE,
       data: err.response.data,

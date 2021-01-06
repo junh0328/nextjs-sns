@@ -20,7 +20,9 @@ module.exports = () => {
             where: { email: email },
           });
           if (!user) {
-            return done(null, false, { reason: '존재하지 않는 사용자입니다.' }); //passport에서는 응답을 보내주지 않기 때문에 done을 통해서 처리된 결과를 판단한다.
+            return done(null, false, { reason: '존재하지 않는 사용자입니다.' });
+            // passport에서는 응답을 보내주지 않기 때문에 done을 통해서 처리된 결과를 판단한다.
+            // sagas/user의 SIGN_UP_FAILURE에 error: err.response.data 로 reason을 보내준다.
           }
           const result = await bcrypt.compare(password, user.password);
           //bcrypt.compare(password, user.password) > (우리가 입력한 password, db에 저장된 password)를 비교
