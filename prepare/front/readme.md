@@ -38,6 +38,8 @@ import { Button, Input, Menu } from 'antd';
 # 3. Redux 사용하기
 
 - 🌟 next에서 리덕스 라이브러리를 손쉽게 사용하기 위해 next-redux-wrapper를 사용한다. 🌟
+  <https://github.com/kirill-konshin/next-redux-wrapper> 🌟
+- 공식 next-redux-wrapper 페이지 참조
 - yarn add next-redux-wrapper / npm install next-redux-wrapper 로 모듈 다운로드
 - yarn add redux / npm install redux로 모듈 다운로드
 - react-redux 사용이세 리액트-리덕스를 사용하기위해 provider 로 컴포넌트 전체를 감싸주었지만, next.js에서는 자동으로 감싸 주기 때문에 감싸 주지 않는다.
@@ -65,7 +67,7 @@ useEffect(() => {
     .catch(() => {
       setError(error);
     });
-});
+}, []);
 ```
 
 - Copntext API를 사용하면 비동기 요청을 처리할 때, 컴포넌트에서 위와 같이 데이터 요청을 하게 되면 의도치 않게 수많은 컴포넌트에서 데이터 요청의 중복이 발생한다.
@@ -95,7 +97,7 @@ function increment() {
   };
 }
 
-4.2 비동기 처리된 액션생성함수
+4.2 비동기 처리된 액션생성함수 (redux-thunk를 사용하여 나타냄)
 function incrementAsync() {
   return (dispatch) => {
     setTimeout(() => {
@@ -534,6 +536,33 @@ prev === next >> false;
 - 자식 컴포넌트에게 props로 함수를 넘겨줄 때는 반드시 useCallback()으로 감싸줘야 한다.
 - props를 받을 때마다 자식 컴포넌트는 부모에게 새로운 함수를 받는 것으로 생각하기 때문에
 
+4. useEffect ?
+
+- useEffect를 사용시 다음과 같은 useEffect문을 자주 볼 것입니다.
+
+```js
+useEffect(() => {
+  dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+}, []);
+```
+
+## 🌟useEffect가 하는 일은 무엇일까요?🌟
+
+- useEffect Hook을 이용하여 우리는 리액트에게 컴포넌트가 렌더링 이후에 어떤 일을 수행해야하는 지를 말합니다. 리액트는 우리가 넘긴 함수를 기억했다가(이 함수를 ‘effect’라고 부릅니다) DOM 업데이트를 수행한 이후에 불러낼 것입니다. 위의 경우에는 effect를 통해 문서 타이틀을 지정하지만, 이 외에도 데이터를 가져오거나 다른 명령형(imperative) API를 불러내는 일도 할 수 있습니다.
+
+## 🌟useEffect를 컴포넌트 안에서 불러내는 이유는 무엇일까요?🌟
+
+- useEffect를 컴포넌트 내부에 둠으로써 effect를 통해 count state 변수(또는 그 어떤 prop에도)에 접근할 수 있게 됩니다. 함수 범위 안에 존재하기 때문에 특별한 API 없이도 값을 얻을 수 있는 것입니다. Hook은 자바스크립트의 클로저를 이용하여 리액트에 한정된 API를 고안하는 것보다 자바스크립트가 이미 가지고 있는 방법을 이용하여 문제를 해결합니다.
+
+## 🌟useEffect는 렌더링 이후에 매번 수행되는 걸까요?🌟
+
+- 네, 기본적으로 첫번째 렌더링과 이후의 모든 업데이트에서 수행됩니다.(나중에 effect를 필요에 맞게 수정하는 방법에 대해 다룰 것입니다.) 마운팅과 업데이트라는 방식으로 생각하는 대신 effect를 렌더링 이후에 발생하는 것으로 생각하는 것이 더 쉬울 것입니다. 리액트는 effect가 수행되는 시점에 이미 DOM이 업데이트되었음을 보장합니다.
+
 4. optional chaning 연산자
 
 5. Toggle 기능 구현
@@ -548,11 +577,7 @@ const onToggleLike = useCallback(() => {
 - prev라는 이전 상태를 나타내는 키워드를 통해 Toggle 버튼 기능을 만들었다.
 
 ```js
-liked ? (
-  <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} />
-) : (
-  <HeartOutlined key="heart" onClick={onToggleLike} />
-);
+liked ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} /> : <HeartOutlined key="heart" onClick={onToggleLike} />;
 ```
 
 - 삼항 연산자를 통해 useState의 liked를 기반으로 onToggle 함수를 실행할 수 있다.
