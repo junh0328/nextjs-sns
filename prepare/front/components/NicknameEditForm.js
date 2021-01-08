@@ -29,8 +29,8 @@ const NicknameEditForm = () => {
     });
   }, [nickname]);
   return (
-    <Form style={style} onFinish={onsubmit}>
-      <Input.Search value={nickname} onChange={onChangeNickname} addonBefore="닉네임" enterButton="수정" />
+    <Form style={style}>
+      <Input.Search value={nickname} onChange={onChangeNickname} addonBefore="닉네임" enterButton="수정" onSearch={onsubmit} />
     </Form>
   );
 };

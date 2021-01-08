@@ -81,12 +81,12 @@ function* loadPosts(action) {
 }
 
 function addPostAPI(data) {
-  return axios.post('/post', data); // postForm에서 addPost(text)로 받았기 때문에 이를 서버에 전달해 주기 위해서 넘겨받은 text > data를 content라는 속성에 넣어주었다.
+  return axios.post('/post', { content: data });
+  // postForm에서 addPost(text)로 받았기 때문에 이를 서버에 전달해 주기 위해서 넘겨받은 text > data를 content라는 속성에 넣어주었다. 이를 통해 post 라우터에서 req.body.content로 접근이 가능해진다.
 }
 
 function* addPost(action) {
   try {
-    console.log('addPost의 데이터는 : ' + action.data);
     const result = yield call(addPostAPI, action.data);
     yield put({
       type: ADD_POST_SUCCESS,
