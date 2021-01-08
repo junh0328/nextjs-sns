@@ -148,7 +148,10 @@ export default thunk;
 - redux-thunk에서는 액션들을 직접 만들어 실행했지만, saga에서는 eventListener처럼 주어지는 상황을 만들어 그 상황에 반응하여 다음 행동을 하도록 한다는 것이 가장 큰 차이점이다.
 - redux-thunk에서는 지원하는 함수들이 한정적이기 때문에 직접 구현해야 하는 내용들이 생긴다. Ex) setTimeout과 같은 처리
 - 또한 thunk에서는 로그인 이벤트를 처리할 때 로그인 버튼을 실수로 두 번 누를 경우, 두번 데이터를 모두 서버에 요청하고 처리한다.
-- 하지만, saga에서는 가장 latest(=최근)한 데이터를 처리하기 때문에 셀프 DDOS 공격을 방지한다. ex) 1초에 3번 이상 같은 액션이 발생하면 해당 액션의 마지막만 실행하거나, 액션을 해당 액션을 차단한다.
+- 하지만 saga는 모듈 설치 시에 제공하는 generator와 effecs들을 통해 이를 사용할 수 있다.
+- thunk는 순수 자바스크립트로 구현해야 하고, saga는 기본적으로 제공되는 함수들을 사용해서 구현한다.
+- 1. saga에서는 가장 latest(=최근)한 데이터를 처리하기 때문에 셀프 DDOS 공격을 방지한다. ex) 1초에 3번 이상 같은 액션이 발생하면 해당 액션의 마지막만 실행하거나, 액션을 해당 액션을 차단한다. >> takelatest
+- 2. saga에서는 throttle 함수를 통해 인피니트 스크롤링 이벤트를 제어하여 들어오는 데이터의 양을 제어할 수 있는 것이 장점이다.
 - https://github.com/bmealhouse/next-redux-saga 공식문서 확인!
 - npm i redux-saga / yarn add redux-saga
 - generator에 대한 이해가 필요하다.

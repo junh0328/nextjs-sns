@@ -86,6 +86,7 @@ function addPostAPI(data) {
 
 function* addPost(action) {
   try {
+    console.log('addPost의 데이터는 : ' + action.data);
     const result = yield call(addPostAPI, action.data);
     yield put({
       type: ADD_POST_SUCCESS,
@@ -105,13 +106,12 @@ function* addPost(action) {
 }
 
 function removePostAPI(data) {
-  return axios.delete('/api/remove', data);
+  return axios.delete(`/post/${data}`); //delete의 데이터는 post.id 이다. (postCard에서 버튼 클릭시 넘어오는 request에 따른 이벤트 처리).
 }
 
 function* removePost(action) {
   try {
     const result = yield call(removePostAPI, action.data);
-
     yield put({
       type: REMOVE_POST_SUCCESS,
       data: result.data,

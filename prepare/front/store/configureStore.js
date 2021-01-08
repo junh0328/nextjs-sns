@@ -6,12 +6,20 @@ import createSagaMiddleware from 'redux-saga';
 import reducer from '../reducers';
 import rootSaga from '../sagas';
 
+/*
+redux-thunk 사용법
+
+const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
+  if(typeof action === 'function'){
+    return action(dispatch, getState);
+  }
+  return next(action);
+}
+*/
 const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
   console.log(action);
   return next(action);
-};
-
-// 해당 loggerMiddleware를 통해 redux-devTools처럼 액션 행동을 콘솔창에서 감지할 수 있게 되었다.
+}; // 해당 loggerMiddleware를 통해 redux-devTools처럼 액션 행동을 콘솔창에서 감지할 수 있게 되었다.
 
 const configureStore = () => {
   const sagaMiddleware = createSagaMiddleware();

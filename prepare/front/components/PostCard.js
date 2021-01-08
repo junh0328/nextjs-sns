@@ -42,7 +42,7 @@ const PostCard = ({ post }) => {
   }, []);
 
   const id = useSelector((state) => state.user.me?.id);
-  const liked = post.Likers.find((v) => v.id === id);
+  const liked = post.Likers.find((v) => v.id === id); // 게시글 좋아요 누른 사람중에 내가 있는지?
 
   return (
     <div style={{ marginBottom: 20 }}>

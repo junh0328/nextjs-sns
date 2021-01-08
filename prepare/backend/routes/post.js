@@ -112,10 +112,20 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.delete('/', isLoggedIn, (req, res) => {
-  //DELETE /post
-  res.json({
-    id: 1,
-  });
+router.delete(`/:postId`, isLoggedIn, async (req, res, next) => {
+  //DELETE /post/10
+  try {
+    await Post.destroy({
+      // 시퀄라이즈에서는 제거할 때 destroy 문법을 사용한다.
+      where: {
+        id: req.params.postId,
+        UserId: req.user.id, // 게시글 아이디와 postId가 같고 내가 쓴 글일 때만 delete를 시킬 수 있도록 조건문을 부여했다.
+      },
+    });
+    res.status(200).json({ PostId: parseInt(req.params.postId, 10) }); // 🌟parseInt를 하지 않으면 PostId가 params에 의해 문자열로 받게 된다. 🌟
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
 });
 module.exports = router;
