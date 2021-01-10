@@ -5,6 +5,7 @@ const passport = require('passport');
 const { User, Post } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewars');
 const db = require('../models');
+const user = require('../models/user');
 
 const router = express.Router();
 
@@ -45,6 +46,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+// 로그인하기
 // 미들웨어를 확장하는 방법
 router.post('/login', isNotLoggedIn, async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -90,7 +92,6 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
     });
   })(req, res, next);
 });
-//POST /user/login 으로 합의
 
 router.post('/', isNotLoggedIn, async (req, res, next) => {
   try {
@@ -122,12 +123,14 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
+// 로그아웃하기
 router.post('/logout', isLoggedIn, (req, res, next) => {
   req.logout();
   req.session.destroy();
   res.send('ok');
 });
 
+// 닉네임 바꾸기
 router.patch('/nickname', isLoggedIn, async (req, res, next) => {
   try {
     await User.update(
@@ -139,6 +142,92 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
       }
     );
     res.status(200).json({ nickname: req.body.nickname });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+// 팔로우하기
+router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => {
+  //PATCH /user/1/follow  1번 유저를 팔로우 하겠다.
+  try {
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    if (!user) {
+      res.status(403).send('존재하지 않는 사람을 팔로우하고 계시네요?');
+    }
+    await user.addFollowers(req.user.id);
+    // 내가 그사람의 팔로워가 되는 것이므로 넘겨받은 유저(팔로우할 아이디)에 팔로워로 추가되는 것이다.
+    res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+// 팔로잉 끊기
+router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => {
+  //DELETE /user/1/follow 1번 유저를 팔로우를 취소하겠다.
+  try {
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    if (!user) {
+      res.status(403).send('존재하지 않는 사람을 언팔로우하고 계시네요?');
+    }
+    await user.removeFollowers(req.user.id); // 팔로우 취소
+    res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+/*
+function removeFollowerAPI(data) {
+  return axios.delete(`/user/follower/${data}`);
+}
+*/
+
+// 팔로워 끊기
+router.delete('/follower/:userid', isLoggedIn, async (req, res, next) => {
+  //DELETE /user/follower/2
+  try {
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    if (!user) {
+      res.status(403).send('존재하지 않는 사람을 차단하려 하고 계시네요?');
+    }
+    await user.removeFollowings(req.user.id); // 팔로우 취소
+    res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+// 팔로우 목록 불러오기
+router.get('/:followers', isLoggedIn, async (req, res, next) => {
+  // GET /user/followers
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send('존재하지 않는 사람을 찾으려고 하시네요?');
+    }
+    const followers = await user.getFollowers();
+    res.status(200).json(followers);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+// 팔로잉 목록 불러오기
+router.get('/:followings', isLoggedIn, async (req, res, next) => {
+  // GET /user/followings
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send('존재하지 않는 사람을 찾으려고 하시네요?');
+    }
+    const followings = await user.getFollowings();
+    res.status(200).json(followings);
   } catch (error) {
     console.error(error);
     return next(error);
