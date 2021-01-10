@@ -21,6 +21,7 @@ const Signup = () => {
   useEffect(() => {
     // 로그인 성공 시에 회원가입 페이지에서 index 페이지로 이동
     if (me && me.id) {
+      alert('회원가입 성공! 메인페이지로 이동합니다. ');
       Router.replace('/'); // replace 시, 뒤로가기 눌렀을 때 회원가입 페이지로 넘어가지 않음
     }
   }, [me && me.id]);
@@ -96,13 +97,7 @@ const Signup = () => {
           <Input name="user-password" type="password" value={password} required onChange={onChangePassword} />
         </div>
         <div>
-          <Input
-            name="user-password-check"
-            type="password"
-            value={passwordCheck}
-            required
-            onChange={onChangPasswordCheck}
-          />
+          <Input name="user-password-check" type="password" value={passwordCheck} required onChange={onChangPasswordCheck} />
           {passwordError && <ErrorMessage style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</ErrorMessage>}
         </div>
         <div>
