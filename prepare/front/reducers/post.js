@@ -115,7 +115,7 @@ const reducer = (state = initialState, action) =>
         draft.loadPostsDone = true;
         draft.mainPosts = action.data.concat(draft.mainPosts);
         // load posts 성공 시, 기존 데이터와 더미데이터를 합쳐주는 역할
-        draft.hasMorePost = draft.mainPosts.length < 50;
+        draft.hasMorePost = draft.mainPosts.length < 5;
         // 50개 이상의 포스트가 있을 시 더이상 포스트를 가져오지 않겠다는 상태를 만들어 줌
         break;
       }
@@ -146,8 +146,8 @@ const reducer = (state = initialState, action) =>
         draft.removePostError = null;
         break;
       case REMOVE_POST_SUCCESS: {
-        draft.removePostLoading = true;
-        draft.removePostDone = false;
+        draft.removePostLoading = false;
+        draft.removePostDone = true;
         draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.PostId);
         break;
       }

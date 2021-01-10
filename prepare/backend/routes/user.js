@@ -167,7 +167,7 @@ router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => {
 
 // 팔로잉 끊기
 router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => {
-  //DELETE /user/1/follow 1번 유저를 팔로우를 취소하겠다.
+  // DELETE /user/1/follow
   try {
     const user = await User.findOne({ where: { id: req.params.userId } });
     if (!user) {
@@ -180,15 +180,10 @@ router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => {
     return next(error);
   }
 });
-/*
-function removeFollowerAPI(data) {
-  return axios.delete(`/user/follower/${data}`);
-}
-*/
 
 // 팔로워 끊기
-router.delete('/follower/:userid', isLoggedIn, async (req, res, next) => {
-  //DELETE /user/follower/2
+router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => {
+  // DELETE /user/follower/2
   try {
     const user = await User.findOne({ where: { id: req.params.userId } });
     if (!user) {

@@ -15,11 +15,14 @@ const FollowList = ({ header, data }) => {
         type: UNFOLLOW_REQUEST,
         data: id,
       });
-    } // header === '팔로워'
-    dispatch({
-      type: REMOVE_FOLLOWER_REQUEST,
-      data: id,
-    });
+    } else if (header === '팔로워') {
+      dispatch({
+        type: REMOVE_FOLLOWER_REQUEST,
+        data: id,
+      });
+    } else {
+      return null;
+    }
   };
   return (
     <List

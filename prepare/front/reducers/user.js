@@ -108,8 +108,8 @@ const reducer = (state = initialState, action) =>
     switch (action.type) {
       case REMOVE_FOLLOWER_REQUEST:
         draft.removeFollowerLoading = true;
+        draft.removeFollowerError = null;
         draft.removeFollowerDone = false;
-        draft.removeFollowerError = action.error;
         break;
       case REMOVE_FOLLOWER_SUCCESS:
         draft.removeFollowerLoading = false;
@@ -120,11 +120,10 @@ const reducer = (state = initialState, action) =>
         draft.removeFollowerLoading = false;
         draft.removeFollowerError = action.error;
         break;
-
       case LOAD_FOLLOWINGS_REQUEST:
         draft.loadFollowingsLoading = true;
+        draft.loadFollowingsError = null;
         draft.loadFollowingsDone = false;
-        draft.loadFollowingsError = action.error;
         break;
       case LOAD_FOLLOWINGS_SUCCESS:
         draft.loadFollowingsLoading = false;
@@ -135,11 +134,10 @@ const reducer = (state = initialState, action) =>
         draft.loadFollowingsLoading = false;
         draft.loadFollowingsError = action.error;
         break;
-
       case LOAD_FOLLOWERS_REQUEST:
         draft.loadFollowersLoading = true;
+        draft.loadFollowersError = null;
         draft.loadFollowersDone = false;
-        draft.loadFollowersError = action.error;
         break;
       case LOAD_FOLLOWERS_SUCCESS:
         draft.loadFollowersLoading = false;
@@ -150,11 +148,10 @@ const reducer = (state = initialState, action) =>
         draft.loadFollowersLoading = false;
         draft.loadFollowersError = action.error;
         break;
-
       case LOAD_MY_INFO_REQUEST:
         draft.loadMyUserLoading = true;
         draft.loadMyUserDone = false;
-        draft.loadMyUserError = action.error;
+        draft.loadMyUserError = null;
         break;
       case LOAD_MY_INFO_SUCCESS:
         draft.loadMyUserLoading = false;
@@ -165,11 +162,10 @@ const reducer = (state = initialState, action) =>
         draft.loadMyUserLoading = false;
         draft.loadMyUserError = action.error;
         break;
-
       case FOLLOW_REQUEST:
         draft.followLoading = true;
+        draft.followError = null;
         draft.followDone = false;
-        draft.followError = action.error;
         break;
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
@@ -180,11 +176,10 @@ const reducer = (state = initialState, action) =>
         draft.followLoading = false;
         draft.followError = action.error;
         break;
-
       case UNFOLLOW_REQUEST:
         draft.unfollowLoading = true;
+        draft.unfollowError = null;
         draft.unfollowDone = false;
-        draft.unfollowError = action.error;
         break;
       case UNFOLLOW_SUCCESS:
         draft.unfollowLoading = false;
@@ -195,39 +190,29 @@ const reducer = (state = initialState, action) =>
         draft.unfollowLoading = false;
         draft.unfollowError = action.error;
         break;
-
       case LOG_IN_REQUEST:
         draft.logInLoading = true;
+        draft.logInError = null;
         draft.logInDone = false;
-        draft.logInError = action.error;
         break;
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
         draft.me = action.data; //dummyUser(action.data)에서 실제 데이터로 변경
         draft.logInDone = true;
         break;
-      /*
-        return {
-          ...state,
-          logInLoading: false,
-          logInDone: true,
-          me: dummyUser(action.data),
-        };
-        */
       case LOG_IN_FAILURE:
         draft.logInLoading = false;
         draft.logInError = action.error;
         break;
-
       case LOG_OUT_REQUEST:
         draft.logOutLoading = true;
+        draft.logOutError = null;
         draft.logOutDone = false;
-        draft.logOutError = action.error;
         break;
       case LOG_OUT_SUCCESS:
         draft.logOutLoading = false;
-        draft.me = null;
         draft.logOutDone = true;
+        draft.me = null;
         break;
       case LOG_OUT_FAILURE:
         draft.logOutLoading = false;
@@ -235,8 +220,8 @@ const reducer = (state = initialState, action) =>
         break;
       case SIGN_UP_REQUEST:
         draft.signUpLoading = true;
+        draft.signUpError = null;
         draft.signUpDone = false;
-        draft.signUpError = action.error;
         break;
       case SIGN_UP_SUCCESS:
         draft.signUpLoading = false;
@@ -248,8 +233,8 @@ const reducer = (state = initialState, action) =>
         break;
       case CHANGE_NICKNAME_REQUEST:
         draft.changeNicknameLoading = true;
+        draft.changeNicknameError = null;
         draft.changeNicknameDone = false;
-        draft.changeNicknameError = action.error;
         break;
       case CHANGE_NICKNAME_SUCCESS:
         draft.me.nickname = action.data.nickname;
@@ -261,29 +246,26 @@ const reducer = (state = initialState, action) =>
         draft.changeNicknameError = action.error;
         break;
       case ADD_POST_TO_ME:
-        /*
-        return {
-          ...state,
-          me: {
-            ...state.me,
-            Posts: [{ id: action.data }, ...state.me.Posts],
-          },
-        };
-         */
         draft.me.Posts.unshift({ id: action.data });
         break;
+      // return {
+      //   ...state,
+      //   me: {
+      //     ...state.me,
+      //     Posts: [{ id: action.data }, ...state.me.Posts],
+      //   },
+      // };
       case REMOVE_POST_OF_ME:
-        /*
-        return {
-          ...state,
-          me: {
-            ...state.me,
-            Posts: state.me.Posts.filter((v) => v.id !== action.data),
-          },
-        };
-         */
-        drafte.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
+        draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
+
         break;
+      // return {
+      //   ...state,
+      //   me: {
+      //     ...state.me,
+      //     Posts: state.me.Posts.filter((v) => v.id !== action.data),
+      //   },
+      // };
       default:
         break;
     }
