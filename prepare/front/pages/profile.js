@@ -18,10 +18,10 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch({
-      type: LOAD_FOLLOWERS_REQUEST,
+      type: LOAD_FOLLOWINGS_REQUEST,
     });
     dispatch({
-      type: LOAD_FOLLOWINGS_REQUEST,
+      type: LOAD_FOLLOWERS_REQUEST,
     });
   }, []);
   // 로그인을 하지 않은 채로 프로필 페이지로 넘어온다면 해당 요청을 다시 인덱스 페이지로 넘겨주는 코드
