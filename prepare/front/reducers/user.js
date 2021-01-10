@@ -45,6 +45,7 @@ export const initialState = {
   signUpData: {},
   loginData: {},
 };
+
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
 export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
@@ -113,7 +114,9 @@ const reducer = (state = initialState, action) =>
         break;
       case REMOVE_FOLLOWER_SUCCESS:
         draft.removeFollowerLoading = false;
-        draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
+        draft.me.Followers = draft.me.Followers.filter(
+          (v) => v.id !== action.data.UserId
+        );
         draft.removeFollowerDone = true;
         break;
       case REMOVE_FOLLOWER_FAILURE:
@@ -183,7 +186,9 @@ const reducer = (state = initialState, action) =>
         break;
       case UNFOLLOW_SUCCESS:
         draft.unfollowLoading = false;
-        draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.UserId);
+        draft.me.Followings = draft.me.Followings.filter(
+          (v) => v.id !== action.data.UserId
+        );
         draft.unfollowDone = true;
         break;
       case UNFOLLOW_FAILURE:

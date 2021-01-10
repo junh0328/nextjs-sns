@@ -54,12 +54,13 @@ function* removeFollower(action) {
 }
 
 function loadFollowersAPI(data) {
+  console.log('팔로워는 : ' + data);
   return axios.get('/user/followers', data);
 }
 
 function* loadFollowers(action) {
   try {
-    const result = yield call(loadFollowersAPI, action.data);
+    const result = yield call(loadFollowersAPI, action.data); // me.Followers
     yield put({
       type: LOAD_FOLLOWERS_SUCCESS,
       data: result.data,
@@ -73,12 +74,13 @@ function* loadFollowers(action) {
 }
 
 function loadFollowingsAPI(data) {
+  console.log('팔로잉은 : ' + data);
   return axios.get('/user/followings', data);
 }
 
 function* loadFollowings(action) {
   try {
-    const result = yield call(loadFollowingsAPI, action.data);
+    const result = yield call(loadFollowingsAPI, action.data); // me.Followings
     yield put({
       type: LOAD_FOLLOWINGS_SUCCESS,
       data: result.data,

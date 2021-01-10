@@ -4,8 +4,6 @@ const passport = require('passport');
 
 const { User, Post } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewars');
-const db = require('../models');
-const user = require('../models/user');
 
 const router = express.Router();
 
@@ -198,7 +196,7 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => {
 });
 
 // 팔로우 목록 불러오기
-router.get('/:followers', isLoggedIn, async (req, res, next) => {
+router.get('/followers', isLoggedIn, async (req, res, next) => {
   // GET /user/followers
   try {
     const user = await User.findOne({ where: { id: req.user.id } });
@@ -214,7 +212,7 @@ router.get('/:followers', isLoggedIn, async (req, res, next) => {
 });
 
 // 팔로잉 목록 불러오기
-router.get('/:followings', isLoggedIn, async (req, res, next) => {
+router.get('/followings', isLoggedIn, async (req, res, next) => {
   // GET /user/followings
   try {
     const user = await User.findOne({ where: { id: req.user.id } });
