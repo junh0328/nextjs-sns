@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, Comment, User, Image } = require('../models');
+const { Post, Comment, User, Image, Hashtag } = require('../models');
 
 const { isLoggedIn } = require('./middlewars');
 
@@ -36,11 +36,22 @@ const upload = multer({
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   // POST /post
   try {
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
     //  이미지가 있을 때
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map((tag) =>
+          Hashtag.findOrCreate({
+            where: { name: tag.slice(1).toLowerCase() },
+          })
+        )
+      ); // [[노드, true], [리액트, true]] 와 같은 형식으로 저장되므로 map() 함수를 돌리는 방법이 달라졌다.
+      await post.addHashtags(result.map((v) => v[0]));
+    }
     if (req.body.image) {
       if (Array.isArray(req.body.image)) {
         // 이미지를 여러 개 올리면 image: [제로초.png , 부기초.png] >> 배열로 올라감

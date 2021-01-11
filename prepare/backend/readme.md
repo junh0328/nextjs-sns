@@ -423,3 +423,20 @@ axios.defaults.withCredentials = true;
 
 - express가 uploads 폴더를 프론트 서버에서 접근할 수 있도록 처리해줘야 한다.
 - front의 PostForm 컴포넌트 <img src={`http://localhost:3065/${v}`}> 에서 'http://localhost:3065/'를 통해 백엔드 서버와 소통할 수 있게 됨
+
+## Hashtag 등록하기
+
+```js
+if (hashtags) {
+  await Promise.all(hashtags.map((tag) => Hashtag.create({ name: tag.slice(1).toLowerCase() }))); // #노드 > slice(1) 을 통해 '#' 을 떼버림 + db에 저장할 때는 소문자로만 저장
+}
+```
+
+- 기존에 이미지를 저장하는 것처럼 hashtag를 저장하게 되면 {#노드 #노드 #익스프레스} 라는 태그를 썼을 때 #노드를 두번 다 DB에 저장하는 경우가 생긴다.
+- 이런 쓸대 없는 중복을 막기 위해서 sequelize의 findOrCreate() 함수를 사용한다.
+
+```js
+if (hashtags) {
+  await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({ name: tag.slice(1).toLowerCase() })));
+}
+```
