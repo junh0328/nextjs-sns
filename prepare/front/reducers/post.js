@@ -170,10 +170,10 @@ const reducer = (state = initialState, action) =>
       case LOAD_POSTS_SUCCESS: {
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
-        draft.mainPosts = action.data.concat(draft.mainPosts);
+        draft.mainPosts = draft.mainPosts.concat(action.data);
         // load posts 성공 시, 기존 데이터와 더미데이터를 합쳐주는 역할
-        draft.hasMorePost = draft.mainPosts.length < 5;
-        // 50개 이상의 포스트가 있을 시 더이상 포스트를 가져오지 않겠다는 상태를 만들어 줌
+        draft.hasMorePost = draft.mainPosts.length === 10;
+        // 마지막으로 불러오는 posts의 갯수가 10개일 때까지 >> 8개 남을 경우 그게 마지막 LOAD_POSTS_REQUEST가 된다.
         break;
       }
       case LOAD_POSTS_FAILURE:

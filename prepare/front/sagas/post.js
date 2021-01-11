@@ -105,8 +105,10 @@ function* unlikePost(action) {
   }
 }
 
-function loadPostsAPI(data) {
-  return axios.get('/posts', data);
+function loadPostsAPI(lastId) {
+  return axios.get(`/posts?lastId=${lastId || 0}`);
+  // get 방식에서 데이터를 넣으려면 주소 뒤에 '?'를 찍고 key ={값} 의 형식으로 넣어줄 수 있다.
+  // `` 백틱을 사용하는 파라미터 형식으로 routes를 넘겨줄 때 뒤의 변수값을 제대로 적지 않아도 실행될 수 있으니, 파라미터 명을 확실히 적어주자..
 }
 
 function* loadPosts(action) {
