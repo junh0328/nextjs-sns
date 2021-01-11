@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const path = require('path');
 
 const postsRouter = require('./routes/posts');
 const postRouter = require('./routes/post');
@@ -39,6 +40,10 @@ app.use(
     credentials: true,
   })
 );
+
+app.use('/', express.static(path.join(__dirname, 'uploads')));
+// static(path.join(...))을 사용하여 현재 폴더 + uploads 폴더에 접근할 수 있도록 허용
+// front의 PostForm 컴포넌트 <img src={`http://localhost:3065/${v}`} 에서 'http://localhost:3065/'
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // form 으로 넘어오는 데이터 관리
 app.use(cookieParser(process.env.COOKIE_SECRET));

@@ -6,7 +6,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPost, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
+import { UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../reducers/post';
 import useinput from '../hooks/useinput';
 
 const PostForm = () => {
@@ -22,9 +22,25 @@ const PostForm = () => {
   }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost(text));
-    console.log(text);
-  }, [text]);
+    if (!text || !text.trim()) {
+      return alert('게시글을 작성하세요.');
+    }
+    const formData = new FormData();
+    imagePaths.forEach((p) => {
+      formData.append('image', p); // req.body.image 백에서 받을 키값 'image'
+    });
+    formData.append('content', text); // req.bodt.cotent 백에서 받을 키값 'content'
+    return dispatch({
+      type: ADD_POST_REQUEST,
+      data: formData,
+      /*
+      data: {
+        imagePaths,
+        content: text,
+      }
+      */
+    });
+  }, [text, imagePaths]);
 
   const imageInput = useRef();
 
@@ -45,6 +61,16 @@ const PostForm = () => {
     });
   }, []);
 
+  const onRemoveImage = useCallback(
+    (index) => () => {
+      dispatch({
+        type: REMOVE_IMAGE,
+        data: index,
+      });
+    },
+    []
+  );
+
   return (
     <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
       <Input.TextArea value={text} onChange={onChangeText} maxLength={140} placeholder="어떤 신기한 일이 있었나요?" />
@@ -56,11 +82,11 @@ const PostForm = () => {
         </Button>
       </div>
       <div>
-        {imagePaths.map((v) => (
+        {imagePaths.map((v, i) => (
           <div key={v} style={{ display: 'inline-block' }}>
-            <img src={v} style={{ width: '200px' }} alt={v} />
+            <img src={`http://localhost:3065/${v}`} style={{ width: '200px' }} alt={v} />
             <div>
-              <Button>제거</Button>
+              <Button onClick={onRemoveImage(i)}>제거</Button>
             </div>
           </div>
         ))}
@@ -70,3 +96,24 @@ const PostForm = () => {
 };
 
 export default PostForm;
+
+/*
+map 안에 데이터를 넣고 싶으면 고차함수를 통해 만들 수 잇다.
+
+imagePaths.map((v,i) => {
+  ...
+})
+와 같이 기존 매핑에서 이미지의 클릭한 해당 인덱스 이미지를 지우기 위해 상수, i를 추가하였다.
+
+>> 이를 바탕으로 고차함수를 만든다.
+
+const onRemoveImage = useCallback(
+    (index) => () => {
+      dispatch({
+        type: REMOVE_IMAGE,
+        data: index,
+      });
+    },
+    []
+  );
+*/

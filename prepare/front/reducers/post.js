@@ -62,6 +62,8 @@ export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
   data,
@@ -75,6 +77,11 @@ export const addComment = (data) => ({
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case REMOVE_IMAGE: {
+        draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+        break;
+        // 서버쪽에서도 지우고 싶다면 똑같이 비동기 처리를 해주면 된다. (이미지는 보통 서버에서 인공지능을 활용한 딥러닝 공부때문에 이미지를 지우지 않는다고 한다. 그래서 front에서만 지우는 형식으로 만들었다.)
+      }
       case UPLOAD_IMAGES_REQUEST:
         draft.uploadImagesLoading = true;
         draft.uploadImagesDone = false;
@@ -158,6 +165,7 @@ const reducer = (state = initialState, action) =>
         draft.addPostLoading = false;
         draft.addPostDone = true;
         draft.mainPosts.unshift(action.data);
+        draft.imagePaths = [];
         break;
       }
       case ADD_POST_FAILURE:

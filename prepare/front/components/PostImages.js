@@ -17,7 +17,12 @@ const PostImages = ({ images }) => {
     return (
       <>
         {/* img를 클릭할 필요 없다는 것을 스크린리더에게 알려주기 위해 role ="presentation" 속성을 사용하였다. */}
-        <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} />
+        <img
+          role="presentation"
+          src={`http://localhost:3065/${images[0].src}`}
+          alt={`http://localhost:3065/${images[0].src}`}
+          onClick={onZoom}
+        />
         {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -28,15 +33,15 @@ const PostImages = ({ images }) => {
         <img
           role="presentation"
           style={{ width: '50%', display: 'inline-block' }}
-          src={images[0].src}
-          alt={images[0].src}
+          src={`http://localhost:3065/${images[0].src}`}
+          alt={`http://localhost:3065/${images[0].src}`}
           onClick={onZoom}
         />
         <img
           role="presentation"
           style={{ width: '50%', display: 'inline-block' }}
-          src={images[1].src}
-          alt={images[1].src}
+          src={`http://localhost:3065/${images[1].src}`}
+          alt={`http://localhost:3065/${images[1].src}`}
           onClick={onZoom}
         />
         {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
@@ -50,8 +55,8 @@ const PostImages = ({ images }) => {
         <img
           role="presentation"
           style={{ width: '50%', display: 'inline-block' }}
-          src={images[0].src}
-          alt={images[0].src}
+          src={`http://localhost:3065/${images[0].src}`}
+          alt={`http://localhost:3065/${images[0].src}`}
           onClick={onZoom}
         />
         <div

@@ -420,3 +420,6 @@ axios.defaults.withCredentials = true;
 - 우리는 이미지 따로 컨텐트 따로 보내는 방식을 사용하여 처리할 것이다.
 - why? 이미지 미리보기, 리사이징을 하기 위헤서 (한번에 보내는 방식은 이게 안됌)
 - 요청이 두 번 왔다갔다 하기 때문에
+
+- express가 uploads 폴더를 프론트 서버에서 접근할 수 있도록 처리해줘야 한다.
+- front의 PostForm 컴포넌트 <img src={`http://localhost:3065/${v}`}> 에서 'http://localhost:3065/'를 통해 백엔드 서버와 소통할 수 있게 됨

@@ -16,21 +16,48 @@ try {
   fs.mkdirSync('uploads');
 }
 
-// app.js에서 postRouter라는 이름으로 사용할 때, /post를 미리 뽑아줬으므로 보기에는 '/' 로 비워져있지만 실제로는 '/post'와 같은 주소이다.
+const upload = multer({
+  // multer 속성 지정  storage(저장 어디에 할꺼야?)
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, 'uploads'); // uploads라는 폴더에 할거야 >> 후에 아마존에 올리면 아마존 서버에 저장, S3 서비스로 대체
+    },
+    filename(req, file, done) {
+      // 파일명 : 제로초.png
+      const ext = path.extname(file.originalname); // 확장자 추출(.png) > 업로드 시에 날짜를 붙여 중복 파일 명을 바꾼다.
+      const basename = path.basename(file.originalname, ext); // 제로초
+      done(null, basename + '_' + new Date().getTime() + ext); // 제로초17382309217.png
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB로 용량 제한
+});
 
-router.post('/', isLoggedIn, async (req, res, next) => {
+// 포스트(게시글) 작성
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   // POST /post
   try {
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
-
+    //  이미지가 있을 때
+    if (req.body.image) {
+      if (Array.isArray(req.body.image)) {
+        // 이미지를 여러 개 올리면 image: [제로초.png , 부기초.png] >> 배열로 올라감
+        const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
+        // 매핑하여 시퀄라이즈 테이블에 올려준다. 파일 주소는 db에 저장되고 파일 자체는 uploads 폴더에 저장됨
+        await post.addImages(images);
+      } else {
+        // 이미지를 하나만 올린 경우 image: 제로초.png >> 주소로 나옴
+        const image = await Image.create({ src: req.body.image });
+        await post.addImages(image);
+      }
+    }
     const fullPost = await Post.findOne({
       where: { id: post.id },
       include: [
         {
-          model: Image,
+          model: Image, // 후에 include 시에 이미지들이 알아서 post.Images로 들어가게 된다.
         },
         {
           model: Comment,
@@ -58,22 +85,6 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
-
-const upload = multer({
-  // multer 속성 지정  storage(저장 어디에 할꺼야?)
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, 'uploads'); // uploads라는 폴더에 할거야 >> 후에 아마존에 올리면 아마존 서버에 저장, S3 서비스로 대체
-    },
-    filename(req, file, done) {
-      // 파일명 : 제로초.png
-      const ext = path.extname(file.originalname); // 확장자 추출(.png) > 업로드 시에 날짜를 붙여 중복 파일 명을 바꾼다.
-      const basename = path.basename(file.originalname, ext); // 제로초
-      done(null, basename + new Date().getTime() + ext); // 제로초17382309217.png
-    },
-  }),
-  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB로 용량 제한
 });
 
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {

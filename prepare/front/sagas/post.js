@@ -103,8 +103,8 @@ function* loadPosts(action) {
 }
 
 function addPostAPI(data) {
-  return axios.post('/post', { content: data });
-  // postForm에서 addPost(text)로 받았기 때문에 이를 서버에 전달해 주기 위해서 넘겨받은 text > data를 content라는 속성에 넣어주었다. 이를 통해 post 라우터에서 req.body.content로 접근이 가능해진다.
+  return axios.post('/post', data);
+  // content만 넘겨주는 방식에서 formData를 넘겨주는 방식으로 변화했기 때문에 {content: data} > data로 바꿔주었다.
 }
 
 function* addPost(action) {
