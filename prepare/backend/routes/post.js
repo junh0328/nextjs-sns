@@ -182,6 +182,90 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
     return next(error);
   }
 });
+
+router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
+  // POST /post/1/retweet
+  try {
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+      include: [
+        {
+          model: Post,
+          as: 'Retweet',
+        },
+      ],
+    });
+    if (!post) {
+      return res.status(403).send('존재하지 않는 게시글입니다.');
+    }
+    if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
+      // 1. 자기 게시글을 리트윗하는 경우/ 2. 자기 게시글을 리트윗한 게시글을 리트윗하는 경우를 막아줘야함
+      return res.status(403).send('자신의 글은 리트윗할 수 없습니다.');
+    }
+    const retweetTargetId = post.RetweetId || post.id;
+    // 일반 타인이 쓴 게시글이거나, 타인(B)이 다른 타인(A)의 리트윗한 게시글은 리트윗할 수 있으므로 이렇게 로직을 설정하였다.
+    // 사용자가 타인(B)의 게시글을 리트윗할 때 본래 트윗의 주인(A)의 게시글을 리트윗할 수 있도록 만든 로직이다.
+    const exPost = await Post.findOne({
+      where: {
+        UserId: req.user.id,
+        RetweetId: retweetTargetId,
+      },
+    });
+    if (exPost) {
+      return res.status(403).send('이미 리트윗된 게시글입니다.');
+    }
+    // 전부 통과된 경우
+    const retweet = await Post.create({
+      UserId: req.user.id,
+      RetweetId: retweetTargetId,
+      content: 'retweet', // model 설정에서 allowNull(빈 값)을 넣지 못하게 만들었음..
+    });
+    const retweetWithPrevPost = await Post.findOne({
+      where: { id: retweet.id },
+      include: [
+        {
+          model: Post,
+          as: 'Retweet',
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+            },
+            {
+              model: Image,
+            },
+          ],
+        },
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
+        {
+          model: Image,
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+            },
+          ],
+        },
+        {
+          model: User,
+          as: 'Likers',
+          attributes: ['id'],
+        },
+      ],
+    });
+    res.status(201).json(retweetWithPrevPost);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
 module.exports = router;
 
 /* 

@@ -37,6 +37,19 @@ router.get('/', async (req, res, next) => {
           as: 'Likers',
           attributes: ['id'],
         },
+        {
+          model: Post,
+          as: 'Retweet',
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+            },
+            {
+              model: Image,
+            },
+          ],
+        },
       ],
     }); // 지금까지 작성한 모든 게시글을 보여줄 것.
     console.log(posts);
