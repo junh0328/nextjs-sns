@@ -135,7 +135,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
 });
 
 router.patch('/:postId/like', isLoggedIn, async (req, res, next) => {
-  // PATCH /post/1/like
+  // PATCH /post/1/like  >> ${data} = post.id
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } });
     if (!post) {
@@ -187,7 +187,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
   // POST /post/1/retweet
   try {
     const post = await Post.findOne({
-      where: { id: req.params.postId },
+      where: { id: req.params.postId }, // 리트윗 할 게시물이 존재하는 지 찾아보는 where 절
       include: [
         {
           model: Post,
@@ -257,7 +257,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
           as: 'Likers',
           attributes: ['id'],
         },
-      ],
+      ], // 댓글 부분은 게시글에서 바로 보여지는 부분이 아니기 때문에 추가적으로 로직이 길어진다면, routes를 새로 만들어 ('/comments'), (reducer, saga 포함) 그 행동을 할 때 {ex) loadComment} 등 을 만들어 분리해줘도 된다.
     });
     res.status(201).json(retweetWithPrevPost);
   } catch (error) {

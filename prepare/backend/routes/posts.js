@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   // GET /posts 실행시에 여러개의 게시물들을 가져옴, get 방식임을 유의해서 볼 것
+  // return axios.get(`/posts?lastId=${lastId || 0}`); 에서 데이터를 넘겨받는다.
   try {
     const where = {};
     if (parseInt(req.query.lastId, 10)) {

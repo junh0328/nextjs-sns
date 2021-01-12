@@ -174,6 +174,7 @@ const reducer = (state = initialState, action) =>
         // load posts 성공 시, 기존 데이터와 더미데이터를 합쳐주는 역할
         draft.hasMorePost = draft.mainPosts.length === 10;
         // 마지막으로 불러오는 posts의 갯수가 10개일 때까지 >> 8개 남을 경우 그게 마지막 LOAD_POSTS_REQUEST가 된다.
+        // 작성된 게시글이 10개일 경우, hasMorePost가 true인 상태에서 한 번 더 불러와야 hasMorePosts 가 false가 된다.
         break;
       }
       case LOAD_POSTS_FAILURE:

@@ -11,6 +11,7 @@ const Home = () => {
   const { me } = useSelector((state) => state.user); //user 리듀서에서 me 상태를 가져옴
   const { mainPosts, hasMorePost, loadPostsLoading, retweetError } = useSelector((state) => state.post);
 
+  // 리트윗 오류를 잡아주기 위한 useEffect()처리, 오류가 발생했을 때 그것을 alert()로 알려주기 위함
   useEffect(() => {
     if (retweetError) {
       alert(retweetError);

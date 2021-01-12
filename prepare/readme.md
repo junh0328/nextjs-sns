@@ -59,3 +59,63 @@
 ## 추가 가능한 기능
 
 1. 내 게시글만 보기
+
+## 공부가 필요한 부분
+
+1. Promise를 통한 비동기 처리
+2. Sequelize를 통한 관계 생성 및 함수 사용
+3. reducer의 initialState 활용 > me의 State
+4. immer를 통해 데이터 불변성 && 데이터 불변성이란?
+5. 고차 함수를 통한 처리 () => () => { ... }
+6. redux-devtools에서 오류를 찾는 방법
+7. PropTypes는 왜 하는가?
+
+# 4.🌟API🌟
+
+- api는 RESTful한 형태를 유지하기 위해 노력했습니다.
+- 기본적으로 user, post, posts 로 나누어져 있습니다.
+
+## 4.1 '/user'
+
+- router.get('/')
+  > 유저 정보 가져오기
+- router.post('/')
+  > 회원가입
+- router.post('/login')
+  > 로그인
+- router.post('/logout')
+  > 로그아웃
+- router.patch('/nickname')
+  > 닉네임 수정
+- router.patch('/;userId/follow')
+  > 팔로우 (내가 팔로잉한 유저)
+- router.delete('/:userId/follow')
+  > 언팔로우 (내가 팔로잉한 유저)
+- router.delete('/follower/:userId')
+  > 팔로워 끊기(나를 팔로우한 유저)
+- router.get('/followers')
+  > 팔로워 목록 가져오기
+- router.get('/followings')
+  > 팔로잉 목록 가져오기
+
+## 4.2 '/post'
+
+- router.post('/')
+  > 게시글 작성
+- router.post('/images')
+  > 이미지 업로드
+- router.post('/:postId/comment')
+  > 댓글 달기
+- router.patch('/:postId/like')
+  > 좋아요 누르기
+- router.delete('/:postId/like')
+  > 좋아요 취소하기
+- router.delete('/:postId')
+  > 게시글 삭제
+- router.post('/:postId/retweet')
+  > 리트윗하기
+
+## 4.3 '/posts'
+
+- router.get('/')
+  > 게시글 불러오기
