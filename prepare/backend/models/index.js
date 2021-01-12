@@ -23,3 +23,10 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
+
+/*
+시퀄라이즈는 모델과 MySQL의 테이블을 연결해주는 역할을 합니다. 
+User와 Comment 모델을 만들어 users 테이블과 comments 테이블에 연결해봅시다. 
+시퀄라이즈는 기본적으로 모델 이름은 단수형으로, 테이블 이름은 복수형으로 사용합니다.
+
+*/

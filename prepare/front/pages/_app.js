@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
 
-import wrapper from '../store/configureStore';
-import withReduxSaga from 'next-redux-saga';
+import wrapper from '../store/configureStore'; // store에서 만들 wrapper
 
 const NodeBird = ({ Component }) => (
   <>
@@ -24,7 +23,7 @@ export function reportWebVitals(metric) {
   // console.log(metric);
 }
 
-export default wrapper.withRedux(withReduxSaga(NodeBird));
+export default wrapper.withRedux(NodeBird);
 
 /*
   페이지들의 공통 적용 사항을 적용하는 페이지 (_app.js 가 pages폴더의 페이지들의 부모인 셈이다.)

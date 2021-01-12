@@ -63,12 +63,16 @@
 ## 공부가 필요한 부분
 
 1. Promise를 통한 비동기 처리
-2. Sequelize를 통한 관계 생성 및 함수 사용
+2. Sequelize를 통한 관계 생성 및 함수 사용 ✔
 3. reducer의 initialState 활용 > me의 State
 4. immer를 통해 데이터 불변성 && 데이터 불변성이란?
+   > https://immerjs.github.io/immer/docs/introduction
 5. 고차 함수를 통한 처리 () => () => { ... }
 6. redux-devtools에서 오류를 찾는 방법
-7. PropTypes는 왜 하는가?
+7. PropTypes는 왜 하는가? ✔
+   > https://www.daleseo.com/react-prop-types/
+   > 리액트는 props로 하여금 상위 노드에서 데이터를 넘겨받을 때 자바스크립트의 타입을 검사하지 않는 속성 때문에 생길 수 있는 오류들이 있다.
+   > 이를 미리 잡아주기 위해서! (warning 처리를 통해서 해당 props의 타입을 잘 받아왔는지 확인할 수 있다.)
 
 # 4.🌟API🌟
 

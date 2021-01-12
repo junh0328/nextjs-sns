@@ -426,6 +426,11 @@ function* watchLoadPosts() {
 }
 ```
 
+# 6. SSR(SERVER-SIDE-RENDERING) 바로 알기
+
+- next.js를 쓰는 이유는 서버 사이드 렌더링을 편하게 해주기 때문이다.
+-
+
 ## 🌟 개발 꿀팁(ui)
 
 - 그리드를 만들 때는 가로(Row) 먼저 나누고 세로(Col)로 나눌 것

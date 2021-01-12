@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { END } from 'redux-saga';
 import AppLayout from '../components/AppLayout';
 import PostCard from '../components/PostCard';
 import PostForm from '../components/PostForm';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -19,14 +21,7 @@ const Home = () => {
     }
   }, [retweetError]);
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_MY_INFO_REQUEST,
-    });
-    dispatch({
-      type: LOAD_POSTS_REQUEST,
-    });
-  }, []);
+  useEffect(() => {}, []);
   // componentDidMount와 같이 처음 실행될 때 LOAD_POSTS_REQUEST를 디스패치시키기 위해 useEffect로 감싸주었다.
   // 따라서 처음에는 게시글이 비워져있다가 [] 빈 배열에 의해 virtual DOM이 아무 것도 없다는 것을 감지하고 LOAD_POSTS_REQUEST를 디스패치한다.
 
@@ -59,6 +54,21 @@ const Home = () => {
     </AppLayout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  console.log(context);
+  context.store.dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
+
+// const Home보다 먼저 실행하여 서버에서 데이터를 불러올 수 있도록 사용하는 wrapper의 SSR 기능
+// store.dispatch로 실행된 내용들이 리듀서의 HYDRATE로 보내진다.
 
 export default Home;
 
