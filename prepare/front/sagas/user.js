@@ -115,7 +115,7 @@ function* changeNickname(action) {
 }
 
 function loadUserAPI(data) {
-  return axios.get('/user');
+  return axios.get(`/user/${data}`);
 }
 
 function* loadUser(action) {
@@ -133,13 +133,13 @@ function* loadUser(action) {
   }
 }
 
-function loadMyInfoAPI(data) {
+function loadMyInfoAPI() {
   return axios.get('/user');
 }
 
-function* loadMyInfo(action) {
+function* loadMyInfo() {
   try {
-    const result = yield call(loadMyInfoAPI, action.data);
+    const result = yield call(loadMyInfoAPI);
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data,

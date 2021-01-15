@@ -429,7 +429,17 @@ function* watchLoadPosts() {
 # 6. SSR(SERVER-SIDE-RENDERING) 바로 알기
 
 - next.js를 쓰는 이유는 서버 사이드 렌더링을 편하게 해주기 때문이다.
--
+- wrapper 의 getServerSideProps/ getStaticProps / getStaticPaths를 통해 SSR을 구현해준다.
+- wrapper는 📁store/configureStore에서 next-redux-wrapper의 기능을 export 시킨 것이다.
+
+|        단어        |                             의미                              |
+| :----------------: | :-----------------------------------------------------------: |
+|   getStaticProps   |         언제 접속해도 데이터가 바뀔 일이 없을 때 사용         |
+|         -          |   빌드할 때 미리 SSR을 통해 html로 만들어서 가지고 있는다.    |
+| getServerSideProps | 접속할 때마다 접속하는 상황에 따라 화면이 바뀌어야 할 때 사용 |
+|         -          |       웬만한 경우 getServerSideProps가 default로 사용됨       |
+|   getStaticPaths   |                                                               |
+|         -          |                                                               |
 
 # 6.1 credentials 해결하기
 

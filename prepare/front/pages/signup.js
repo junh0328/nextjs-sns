@@ -9,6 +9,9 @@ import AppLayout from '../components/AppLayout';
 import useinput from '../hooks/useinput';
 import { SIGN_UP_REQUEST } from '../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
+import wrapper from '../store/configureStore';
+import axios from 'axios';
+import { END } from 'redux-saga';
 // 인라인 태그로 작성시에 리렌더링을 방지하기 위해 styled component로 사용
 const ErrorMessage = styled.div`
   color: red;
@@ -115,5 +118,21 @@ const Signup = () => {
     </AppLayout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  console.log('getServerSideProps start!');
+  console.log(context.req.headers);
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  context.store.dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch(END);
+  console.log('getServerSideProps end!');
+  await context.store.sagaTask.toPromise();
+});
 
 export default Signup;

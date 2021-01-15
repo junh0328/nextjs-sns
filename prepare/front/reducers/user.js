@@ -46,8 +46,7 @@ export const initialState = {
   removeFollowerError: null,
 
   me: null,
-  signUpData: {},
-  loginData: {},
+  userInfo: null,
 };
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
