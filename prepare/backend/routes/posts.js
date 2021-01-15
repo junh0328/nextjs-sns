@@ -62,7 +62,7 @@ router.get('/', async (req, res, next) => {
         },
       ],
     }); // 지금까지 작성한 모든 게시글을 보여줄 것.
-    console.log(posts);
+    // console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);

@@ -24,3 +24,8 @@ const rootReducer = (state, action) => {
 };
 
 export default rootReducer;
+
+/*
+@@ INIT > __NEXT_REDUX_WRAPPER
+pages/index.js에서 설정한 서버사이드 렌더링의 결과 여부가 HYDRATE로 넘어온다.
+*/

@@ -66,9 +66,11 @@
 2. Sequelize를 통한 관계 생성 및 함수 사용 ✔
 3. reducer의 initialState 활용 > me의 State
 4. immer를 통해 데이터 불변성 && 데이터 불변성이란?
-   > https://immerjs.github.io/immer/docs/introduction
+   > https://immerjs.github.io/immer/docs/introduction immer
+   > https://evan-moon.github.io/2020/01/05/what-is-immutable/ 데이터불변성(immutable)
 5. 고차 함수를 통한 처리 () => () => { ... }
 6. redux-devtools에서 오류를 찾는 방법
+   > https://medium.com/signal9/redux-%EA%B0%9C%EB%B0%9C%EC%9D%84-%EB%8D%94-%ED%8E%B8%ED%95%98%EA%B2%8C-redux-devtools-4e228655ac7d
 7. PropTypes는 왜 하는가? ✔
    > https://www.daleseo.com/react-prop-types/
    > 리액트는 props로 하여금 상위 노드에서 데이터를 넘겨받을 때 자바스크립트의 타입을 검사하지 않는 속성 때문에 생길 수 있는 오류들이 있다.

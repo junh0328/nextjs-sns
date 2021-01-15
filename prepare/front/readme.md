@@ -431,6 +431,62 @@ function* watchLoadPosts() {
 - next.js를 쓰는 이유는 서버 사이드 렌더링을 편하게 해주기 때문이다.
 -
 
+# 6.1 credentials 해결하기
+
+- CSR에서 SSR 전환할 때 브라우저가 백엔드에서 바로 데이터를 넘겨받아야 되는 상황이다.
+- 기존에는 브라우저가 프론트 서버에 요청하여 (GET_POSTS_REQUEST) 요청을 받은 프론트 서버는 백엔드 서버에서 POST 불러와 사용자에게 보여줬다.
+- 그렇기 때문에 프론트 서버와 백엔드 서버의 credentials 문제는 해결되어 있었다.
+- 하지만, SSR의 경우 브라우저가 백엔드 서버에게 데이터를 바로 요청하기 때문에 이 credentials문제를 다시 해결해 줘야 한다.
+- why? 다른 도메인(포트)끼리는 데이터 및 쿠키를 전달할 수 없기 때문에!
+
+```js
+📁pages/index.js
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  // 서버 사이드 렌더링시 프론트에서 서버에 쿠키를 보내주기 위한 작업
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = cookie;
+  console.log(context);
+  context.store.dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
+
+export default Home;
+```
+
+- context.req 를 통해서 req.headers안에 담긴 sid(쿠키)를 보내준다.
+- 이를 통해 SSR 환경에서 서버가 껏다 켜져도 로그인이 풀리지 않는 환경을 만들어줄 수 있다.
+- 하지만 이 상황에서 쿠키를 서버에 보낼 때 문제가 생길 수 있는데, 다른 사람이 같은 페이지에 접속했을 때 쿠키를 공유할 수 있다는 것이다.
+- why? 쿠키를 axios를 통해 모두 한 서버로 보내기 때문에
+- 따라서 다음과 같은 조건문을 넣어줘서 자신의 요청이 아닐 경우, 쿠키를 지워주도록 한다.
+
+```js
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  // 그렇지 않을 때는 쿠키를 지워준다.
+  if (context.req && cookie) {
+    // + 서버일 때, 쿠키가 있을 때만 쿠키를 넘겨주도록 한다.
+    axios.defaults.headers.Cookie = cookie;
+  }
+  console.log(context);
+  context.store.dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
+```
+
 ## 🌟 개발 꿀팁(ui)
 
 - 그리드를 만들 때는 가로(Row) 먼저 나누고 세로(Col)로 나눌 것

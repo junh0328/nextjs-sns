@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { END } from 'redux-saga';
@@ -56,6 +57,15 @@ const Home = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  // 서버 사이드 렌더링시 프론트에서 서버에 쿠키를 보내주기 위한 작업
+
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  // 그렇지 않을 때는 쿠키를 지워준다.
+  if (context.req && cookie) {
+    // + 서버일 때, 쿠키가 있을 때만 쿠키를 넘겨주도록 한다.
+    axios.defaults.headers.Cookie = cookie;
+  }
   console.log(context);
   context.store.dispatch({
     type: LOAD_MY_INFO_REQUEST,
@@ -65,6 +75,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   });
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
+  //sagaTask는 store/configureStore.js에 등록한 sagaTask를 그대로 가져온다
 });
 
 // const Home보다 먼저 실행하여 서버에서 데이터를 불러올 수 있도록 사용하는 wrapper의 SSR 기능
