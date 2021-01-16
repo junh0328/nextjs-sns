@@ -130,6 +130,7 @@ function* loadPosts(action) {
 }
 
 function loadPostAPI(data) {
+  console.log(`${data} 번 데이터 요청중`);
   return axios.get(`/post/${data}`);
 }
 

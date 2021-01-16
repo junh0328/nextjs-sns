@@ -55,9 +55,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
     if (req.body.image) {
       if (Array.isArray(req.body.image)) {
         // 이미지를 여러 개 올리면 image: [제로초.png , 부기초.png] >> 배열로 올라감
-        const images = await Promise.all(
-          req.body.image.map((image) => Image.create({ src: image }))
-        );
+        const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
         // 매핑하여 시퀄라이즈 테이블에 올려준다. 파일 주소는 db에 저장되고 파일 자체는 uploads 폴더에 저장됨
         await post.addImages(images);
       } else {
@@ -100,16 +98,11 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   }
 });
 
-router.post(
-  '/images',
-  isLoggedIn,
-  upload.array('image'),
-  async (req, res, next) => {
-    //POST /post/images ,
-    console.log(req.files);
-    res.json(req.files.map((v) => v.filename));
-  }
-);
+router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
+  //POST /post/images ,
+  console.log(req.files);
+  res.json(req.files.map((v) => v.filename));
+});
 
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
   // POST /post/1/comment
@@ -183,12 +176,13 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
         UserId: req.user.id, // 게시글 아이디와 postId가 같고 내가 쓴 글일 때만 delete를 시킬 수 있도록 조건문을 부여했다.
       },
     });
-    res.status(200).json({ PostId: parseInt(req.params.postId, 10) }); // 🌟parseInt를 하지 않으면 PostId가 params에 의해 문자열로 받게 된다. 🌟
+    return res.status(200).json({ PostId: parseInt(req.params.postId, 10) }); // 🌟parseInt를 하지 않으면 PostId가 params에 의해 문자열로 받게 된다. 🌟
   } catch (error) {
     console.error(error);
     return next(error);
   }
 });
+
 router.get('/:postId', async (req, res, next) => {
   try {
     const post = await Post.findOne({
@@ -218,10 +212,13 @@ router.get('/:postId', async (req, res, next) => {
         },
       ],
     });
-    res.status(200).json(post);
+    if (!post) {
+      return res.status(403).send('존재하지 않는 게시글입니다.');
+    }
+    return res.status(200).json(post);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 });
 
@@ -240,10 +237,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
     if (!post) {
       return res.status(403).send('존재하지 않는 게시글입니다.');
     }
-    if (
-      req.user.id === post.UserId ||
-      (post.Retweet && post.Retweet.UserId === req.user.id)
-    ) {
+    if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
       // 1. 자기 게시글을 리트윗하는 경우/ 2. 자기 게시글을 리트윗한 게시글을 리트윗하는 경우를 막아줘야함
       return res.status(403).send('자신의 글은 리트윗할 수 없습니다.');
     }

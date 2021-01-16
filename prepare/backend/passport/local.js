@@ -1,9 +1,9 @@
 // 로그인 전략을 세우는 페이지
-
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local'); // 구조 분해 할당에 따른 변화 문법
 const bcrypt = require('bcrypt');
 const { User } = require('../models');
+
 module.exports = () => {
   passport.use(
     new LocalStrategy(
@@ -17,10 +17,10 @@ module.exports = () => {
         //done 은 콜백함수이다.
         try {
           const user = await User.findOne({
-            where: { email: email },
+            where: { email },
           });
           if (!user) {
-            return done(null, false, { reason: '존재하지 않는 사용자입니다.' });
+            return done(null, false, { reason: '존재하지 않는 이메일입니다!' });
             // passport에서는 응답을 보내주지 않기 때문에 done을 통해서 처리된 결과를 판단한다.
             // sagas/user의 SIGN_UP_FAILURE에 error: err.response.data 로 reason을 보내준다.
           }
