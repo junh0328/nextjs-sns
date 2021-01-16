@@ -373,9 +373,16 @@ initialState.mainPosts = initialState.mainPosts.concat(
 ```js
 useEffect(() => {
   function onScroll() {
-    console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
+    console.log(
+      window.scrollY,
+      document.documentElement.clientHeight,
+      document.documentElement.scrollHeight
+    );
 
-    if (window.scrollY + document.documentElement.clientHeight === document.documentElement.scrollHeight) {
+    if (
+      window.scrollY + document.documentElement.clientHeight ===
+      document.documentElement.scrollHeight
+    ) {
       if (hasMorePost) {
         dispatch({
           type: LOAD_POSTS_REQUEST,
@@ -450,6 +457,7 @@ function* watchLoadPosts() {
 - why? 다른 도메인(포트)끼리는 데이터 및 쿠키를 전달할 수 없기 때문에!
 
 ```js
+situation 1
 📁pages/index.js
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
@@ -477,24 +485,87 @@ export default Home;
 - 따라서 다음과 같은 조건문을 넣어줘서 자신의 요청이 아닐 경우, 쿠키를 지워주도록 한다.
 
 ```js
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  // 그렇지 않을 때는 쿠키를 지워준다.
-  if (context.req && cookie) {
-    // + 서버일 때, 쿠키가 있을 때만 쿠키를 넘겨주도록 한다.
-    axios.defaults.headers.Cookie = cookie;
+situation 1.2
+📁pages/index.js
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    // 그렇지 않을 때는 쿠키를 지워준다.
+    if (context.req && cookie) {
+      // + 서버일 때, 쿠키가 있을 때만 쿠키를 넘겨주도록 한다.
+      axios.defaults.headers.Cookie = cookie;
+    }
+    console.log(context);
+    context.store.dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch({
+      type: LOAD_POSTS_REQUEST,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
   }
-  console.log(context);
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_POSTS_REQUEST,
-  });
-  context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
-});
+);
+```
+
+```js
+situation 2
+📁pages/post/[id].js
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    console.log('getServerSideProps start!');
+    console.log(context.req.headers);
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch({
+      type: LOAD_POST_REQUEST,
+      data: context.params.id,
+    });
+    context.store.dispatch(END);
+    console.log('getServerSideProps end!');
+    await context.store.sagaTask.toPromise();
+
+```
+
+- getServerSideProps와 같은 SSR 상황에서 dispatch 액션을 통해 데이터를 보내줄 때는 data: context.params.id 와 같은 형식으로 context를 사용하여 보내줍니다.
+
+## 6.2 다이나믹 라우팅처리하기
+
+- next 9버전 이상부터는 다이나믹 라우팅을 지원하여 한가지 페이지에서 다양한 파라미터로 요청받는 페이지를 처리할 수 있습니다.
+- post/[id].js 폴더를 통해 >> post/1.js , .... ,posr/103.js 와 같이 포스트 페이지의 큰 레이아웃을 만들어 준다고 생각하면 됩니다.
+- id는 순차적으로 증가합니다.
+
+```js
+import { useRouter } from 'next/router';
+
+const Post = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  return <div>{id}번 게시글</div>;
+};
+
+export default Post;
+```
+
+- next/router의 useRouter를 사용합니다.
+- 구조분해 할당을 통해 id를 router.query에서 분리시켜 가져옵니다.
+- 🌟const id = router.query.id와 같은 문법입니다.🌟
+- url을 통해
+
+```
+localhost:3000/port/1 과 같은 형식으로 접근할 수 있습니다.
+>>>
+1 번 게시글
 ```
 
 ## 🌟 개발 꿀팁(ui)
@@ -651,7 +722,11 @@ const onToggleLike = useCallback(() => {
 - prev라는 이전 상태를 나타내는 키워드를 통해 Toggle 버튼 기능을 만들었다.
 
 ```js
-liked ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} /> : <HeartOutlined key="heart" onClick={onToggleLike} />;
+liked ? (
+  <HeartTwoTone twoToneColor='#eb2f96' key='heart' onClick={onToggleLike} />
+) : (
+  <HeartOutlined key='heart' onClick={onToggleLike} />
+);
 ```
 
 - 삼항 연산자를 통해 useState의 liked를 기반으로 onToggle 함수를 실행할 수 있다.

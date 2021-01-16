@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
 import useinput from '../hooks/useinput';
-import { SIGN_UP_REQUEST } from '../reducers/user';
+import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
@@ -19,7 +19,9 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector(
+    (state) => state.user
+  );
 
   useEffect(() => {
     // 로그인 성공 시에 회원가입 페이지에서 index 페이지로 이동
@@ -85,32 +87,59 @@ const Signup = () => {
       </Head>
       <Form onFinish={onSubmit}>
         <div>
-          <label htmlFor="user-email">이메일</label>
+          <label htmlFor='user-email'>이메일</label>
           <br />
-          <Input name="user-email" type="email" value={email} required onChange={onChangeemail} />
+          <Input
+            name='user-email'
+            type='email'
+            value={email}
+            required
+            onChange={onChangeemail}
+          />
         </div>
         <div>
-          <label htmlFor="user-nick">닉네임</label>
+          <label htmlFor='user-nick'>닉네임</label>
           <br />
-          <Input name="user-nick" value={nickname} required onChange={onChangeNickname} />
+          <Input
+            name='user-nick'
+            value={nickname}
+            required
+            onChange={onChangeNickname}
+          />
         </div>
         <div>
-          <label htmlFor="user-password">비밀번호</label>
+          <label htmlFor='user-password'>비밀번호</label>
           <br />
-          <Input name="user-password" type="password" value={password} required onChange={onChangePassword} />
+          <Input
+            name='user-password'
+            type='password'
+            value={password}
+            required
+            onChange={onChangePassword}
+          />
         </div>
         <div>
-          <Input name="user-password-check" type="password" value={passwordCheck} required onChange={onChangPasswordCheck} />
-          {passwordError && <ErrorMessage style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</ErrorMessage>}
+          <Input
+            name='user-password-check'
+            type='password'
+            value={passwordCheck}
+            required
+            onChange={onChangPasswordCheck}
+          />
+          {passwordError && (
+            <ErrorMessage style={{ color: 'red' }}>
+              비밀번호가 일치하지 않습니다.
+            </ErrorMessage>
+          )}
         </div>
         <div>
-          <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
+          <Checkbox name='user-term' checked={term} onChange={onChangeTerm}>
             준희의 말을 잘 들을 것을 동의합니다.
           </Checkbox>
           {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button type="primary" htmlType="submit" loading={signUpLoading}>
+          <Button type='primary' htmlType='submit' loading={signUpLoading}>
             가입하기
           </Button>
         </div>
@@ -119,20 +148,22 @@ const Signup = () => {
   );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log('getServerSideProps start!');
-  console.log(context.req.headers);
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    console.log('getServerSideProps start!');
+    console.log(context.req.headers);
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch(END);
+    console.log('getServerSideProps end!');
+    await context.store.sagaTask.toPromise();
   }
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch(END);
-  console.log('getServerSideProps end!');
-  await context.store.sagaTask.toPromise();
-});
+);
 
 export default Signup;

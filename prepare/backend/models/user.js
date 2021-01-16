@@ -27,9 +27,17 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (db) => {
     db.User.hasMany(db.Post); //User가 여러개의 Post를 가질 수 있다.
     db.User.hasMany(db.Comment);
-    db.User.belongsToMany(db.Post, { through: 'Like', as: 'Likerd' }); // 사용자와 게시글의 좋아요 관계
-    db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'followingId' });
-    db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followings', foreignKey: 'followerId' });
+    db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' }); // 사용자와 게시글의 좋아요 관계
+    db.User.belongsToMany(db.User, {
+      through: 'Follow',
+      as: 'Followers',
+      foreignKey: 'followingId',
+    });
+    db.User.belongsToMany(db.User, {
+      through: 'Follow',
+      as: 'Followings',
+      foreignKey: 'followerId',
+    });
   };
   return User;
 };

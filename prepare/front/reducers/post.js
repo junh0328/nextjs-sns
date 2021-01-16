@@ -2,6 +2,7 @@ import produce from 'immer';
 
 export const initialState = {
   mainPosts: [],
+  singlePost: null,
   imagePaths: [],
   hasMorePost: true, // 처음에는 포스트가 없을 때 포스트를 가져오는 state
 
@@ -16,6 +17,10 @@ export const initialState = {
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
+
+  loadPostLoading: false,
+  loadPostDone: false,
+  loadPostError: null,
 
   addPostLoading: false,
   addPostDone: false,
@@ -53,6 +58,10 @@ export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
+export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
 
 // 액션 생성함수를 다음과 같이 상수로 지정한다면, reducer에서 오류 나는 것을 사전에 잡을 수 있다.
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
@@ -182,6 +191,21 @@ const reducer = (state = initialState, action) =>
         draft.loadPostsError = action.error;
         break;
 
+      case LOAD_POST_REQUEST:
+        draft.loadPostLoading = true;
+        draft.loadPostDone = false;
+        draft.loadPostError = null;
+        break;
+      case LOAD_POST_SUCCESS:
+        draft.loadPostLoading = false;
+        draft.loadPostDone = true;
+        draft.singlePost = action.data;
+        break;
+      case LOAD_POST_FAILURE:
+        draft.loadPostLoading = false;
+        draft.loadPostError = action.error;
+        break;
+
       case ADD_POST_REQUEST:
         draft.addPostLoading = true;
         draft.addPostDone = false;
@@ -207,7 +231,9 @@ const reducer = (state = initialState, action) =>
       case REMOVE_POST_SUCCESS: {
         draft.removePostLoading = false;
         draft.removePostDone = true;
-        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.PostId);
+        draft.mainPosts = draft.mainPosts.filter(
+          (v) => v.id !== action.data.PostId
+        );
         break;
       }
       case REMOVE_POST_FAILURE:
@@ -220,22 +246,6 @@ const reducer = (state = initialState, action) =>
         draft.addcommentError = null;
         break;
       case ADD_COMMENT_SUCCESS: {
-        /* immer 라이브러리를 도입한 이유
-        action.data.content, postId, userId 가 들어옴 > ADD_POST_SUCCESS로 전달됨
-
-        const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId);
-        const post = { ...state.mainPosts[postIndex] };
-        post.Comments = [dummyComment(action.data.content), ...post.Comments];
-        const mainPosts = [...state.mainPosts];
-        mainPosts[postIndex] = post;
-
-        return {
-          ...state,
-          mainPosts,
-          addCommentLoading: false,
-          addCommentDone: true,
-        };
-        */
         const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
         post.Comments.unshift(action.data);
         draft.addCommentLoading = false;
