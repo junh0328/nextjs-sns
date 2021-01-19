@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
@@ -10,6 +10,8 @@ import LoginForm from '../components/LoginForm';
 
 import { useSelector } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
+import useinput from '../hooks/useinput';
+import Router from 'next/router';
 
 const Global = createGlobalStyle`
   .ant-row{
@@ -30,7 +32,12 @@ const SearchInput = styled(Input.Search)`
 `;
 
 const AppLayout = ({ children }) => {
+  const [searchInput, onChangeSearchInput] = useinput('');
   const { me } = useSelector((state) => state.user);
+
+  const onSearch = useCallback(() => {
+    Router.push(`/hashtag/${searchInput}`);
+  }, [searchInput]);
 
   return (
     <div>
@@ -47,7 +54,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item>
-          <SearchInput enterButton />
+          <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />
         </Menu.Item>
         <Menu.Item>
           <Link href="/signup">
