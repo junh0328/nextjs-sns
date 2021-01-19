@@ -77,6 +77,8 @@ function* loadFollowers(action) {
 }
 
 function loadFollowingsAPI(data) {
+  console.log('프로필 목록 불러오기 요청한 아이디는 ?');
+  console.log(data);
   return axios.get('/user/followings', data);
 }
 

@@ -44,6 +44,44 @@ router.get('/', async (req, res, next) => {
     return next(error);
   }
 });
+// 팔로우 목록 불러오기
+router.get('/followers', isLoggedIn, async (req, res, next) => {
+  // GET /user/followers
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send('존재하지 않는 사람을 찾으려고 하시네요?');
+    }
+    const followers = await user.getFollowers({
+      limit: parseInt(req.query.limit, 10), // 최대 3명을 불러옴
+    });
+    res.status(200).json(followers);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+// 팔로잉 목록 불러오기
+router.get('/followings', isLoggedIn, async (req, res, next) => {
+  // GET /user/followings
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send('존재하지 않는 사람을 찾으려고 하시네요?');
+    }
+    const followings = await user.getFollowings({
+      limit: parseInt(req.query.limit, 10),
+    });
+    console.log('팔로윙 목록 전달! ');
+    console.log(followings);
+    res.status(200).json(followings);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
 // 특정 사용자 정보 가져오기
 router.get('/:userId', async (req, res, next) => {
   //GET /user/1
@@ -293,38 +331,6 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => {
     }
     await user.removeFollowings(req.user.id); // 팔로우 취소
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
-  } catch (error) {
-    console.error(error);
-    return next(error);
-  }
-});
-
-// 팔로우 목록 불러오기
-router.get('/followers', isLoggedIn, async (req, res, next) => {
-  // GET /user/followers
-  try {
-    const user = await User.findOne({ where: { id: req.user.id } });
-    if (!user) {
-      res.status(403).send('존재하지 않는 사람을 찾으려고 하시네요?');
-    }
-    const followers = await user.getFollowers();
-    res.status(200).json(followers);
-  } catch (error) {
-    console.error(error);
-    return next(error);
-  }
-});
-
-// 팔로잉 목록 불러오기
-router.get('/followings', isLoggedIn, async (req, res, next) => {
-  // GET /user/followings
-  try {
-    const user = await User.findOne({ where: { id: req.user.id } });
-    if (!user) {
-      res.status(403).send('존재하지 않는 사람을 찾으려고 하시네요?');
-    }
-    const followings = await user.getFollowings();
-    res.status(200).json(followings);
   } catch (error) {
     console.error(error);
     return next(error);

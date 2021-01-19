@@ -363,7 +363,7 @@ exports.isNotLoggedIn = (req, res, next) => {
 
 - next 함수의 파라미터가 아무 것도 없으므로 다시 '/logout'함수로 되돌아 가 나머지 코드를 진행한다.
 
-# credentials로 쿠키 공휴가ㅣ
+# credentials로 쿠키 공유하기
 
 - 현재까지 프로그래밍을 완료했다면, 로그인을 하고 댓글을 달거나, 트윗을 남기고 싶을 것이다.
 - 하지만, 브라우저의 서버와 백엔드 서버의 도메인이 다른 관계로 쿠키를 서로 공유하지 못한다.(전달되지 않는다.)
@@ -440,3 +440,10 @@ if (hashtags) {
   await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({ name: tag.slice(1).toLowerCase() })));
 }
 ```
+
+## Router 만들 때 주의할 점
+
+- 미들웨어는 위에서 아래로 왼쪽에서 오른쪽으로 데이터 흐름이 진행된다.
+- 라우터 또한 미들웨어이다.
+- 따라서 사용자의 요청에 따라 user/followings라는 API를 실행할 때 params를 받는 라우터 ('/:userId'),(와일드 카드라고도 불림)보다 위에 라우팅 코드를 적어주어야 한다.
+- why? 와일드카드에서 다 걸려서 null 또는 error를 노드, 사용자에게 전달할 수 있기 때문이다.

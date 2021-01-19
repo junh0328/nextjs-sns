@@ -21,43 +21,51 @@ const Post = () => {
     <AppLayout>
       <Head>
         <title>{singlePost.User.nickname}님의 글</title>
-        <meta name='description' content={singlePost.content} />
-        <meta property='og:description' content={singlePost.content} />
-        <meta
-          property='og:image'
-          content={
-            singlePost.Images[0]
-              ? singlePost.Images[0].src
-              : 'https://nodebird.com/favicon.ico'
-          }
-        />
+        <meta name="description" content={singlePost.content} />
+        <meta property="og:description" content={singlePost.content} />
+        <meta property="og:image" content={singlePost.Images[0] ? singlePost.Images[0].src : 'https://nodebird.com/favicon.ico'} />
       </Head>
       <PostCard post={singlePost} />
     </AppLayout>
   );
 };
+/* 
+- getServerSideProps와 같이 쓰는 getStaticPaths는 정적으로 params.id를 미리 지정해 줘야 사용 가능한 SSR 다이나믹 라우팅 기법이다.
+- id > 즉 post 갯수를 사전에 모두 만들 수 없기 때문에, 규모가 커질수록 getStaticPaths()는 사용하지 않는다.
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  async (context) => {
-    console.log('getServerSideProps start!');
-    console.log(context.req.headers);
-    const cookie = context.req ? context.req.headers.cookie : '';
-    axios.defaults.headers.Cookie = '';
-    if (context.req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-    }
-    context.store.dispatch({
-      type: LOAD_MY_INFO_REQUEST,
-    });
-    context.store.dispatch({
-      type: LOAD_POST_REQUEST,
-      data: context.params.id,
-    });
-    context.store.dispatch(END);
-    console.log('getServerSideProps end!');
-    await context.store.sagaTask.toPromise();
+  export async function getStaticPaths() {
+    return {
+      paths: [
+        { params: { id: '1' } },
+        { params: { id: '2' } },
+        { params: { id: '3' } },
+        { params: { id: '4' } },
+      ],
+      fallback: true,
+    };
   }
-);
+
+ */
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  console.log('getServerSideProps start!');
+  console.log(context.req.headers);
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  context.store.dispatch({
+    type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_POST_REQUEST,
+    data: context.params.id,
+  });
+  context.store.dispatch(END);
+  console.log('getServerSideProps end!');
+  await context.store.sagaTask.toPromise();
+});
 
 export default Post;
 

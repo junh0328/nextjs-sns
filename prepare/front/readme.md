@@ -373,16 +373,9 @@ initialState.mainPosts = initialState.mainPosts.concat(
 ```js
 useEffect(() => {
   function onScroll() {
-    console.log(
-      window.scrollY,
-      document.documentElement.clientHeight,
-      document.documentElement.scrollHeight
-    );
+    console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
 
-    if (
-      window.scrollY + document.documentElement.clientHeight ===
-      document.documentElement.scrollHeight
-    ) {
+    if (window.scrollY + document.documentElement.clientHeight === document.documentElement.scrollHeight) {
       if (hasMorePost) {
         dispatch({
           type: LOAD_POSTS_REQUEST,
@@ -439,14 +432,14 @@ function* watchLoadPosts() {
 - wrapper 의 getServerSideProps/ getStaticProps / getStaticPaths를 통해 SSR을 구현해준다.
 - wrapper는 📁store/configureStore에서 next-redux-wrapper의 기능을 export 시킨 것이다.
 
-|        단어        |                             의미                              |
-| :----------------: | :-----------------------------------------------------------: |
-|   getStaticProps   |         언제 접속해도 데이터가 바뀔 일이 없을 때 사용         |
-|         -          |   빌드할 때 미리 SSR을 통해 html로 만들어서 가지고 있는다.    |
-| getServerSideProps | 접속할 때마다 접속하는 상황에 따라 화면이 바뀌어야 할 때 사용 |
-|         -          |       웬만한 경우 getServerSideProps가 default로 사용됨       |
-|   getStaticPaths   |                                                               |
-|         -          |                                                               |
+|        단어        |                              의미                               |
+| :----------------: | :-------------------------------------------------------------: |
+|   getStaticProps   |          언제 접속해도 데이터가 바뀔 일이 없을 때 사용          |
+|         -          |    빌드할 때 미리 SSR을 통해 html로 만들어서 가지고 있는다.     |
+| getServerSideProps |  접속할 때마다 접속하는 상황에 따라 화면이 바뀌어야 할 때 사용  |
+|         -          |        웬만한 경우 getServerSideProps가 default로 사용됨        |
+|   getStaticPaths   |                 getStaticProps와 같이 사용한다.                 |
+|         -          | /pages/user,post,hashtag 와 같이 다이나믹 라우팅 시에 사용된다. |
 
 # 6.1 credentials 해결하기
 
@@ -567,6 +560,11 @@ localhost:3000/port/1 과 같은 형식으로 접근할 수 있습니다.
 >>>
 1 번 게시글
 ```
+
+## 6.2 swr 라이브러리 사용하기
+
+- 우리가 profile 페이지와 같이 사용자의 정보를 불러오는 페이지를 만들 때, 수많은 REQUEST, SUCCESS, FAILURE 요청을 보내게 됩니다.
+- 이를 간단하게 줄이기 위해 swr 라이브러리를 사용해봅시다.
 
 ## 🌟 개발 꿀팁(ui)
 
@@ -722,11 +720,7 @@ const onToggleLike = useCallback(() => {
 - prev라는 이전 상태를 나타내는 키워드를 통해 Toggle 버튼 기능을 만들었다.
 
 ```js
-liked ? (
-  <HeartTwoTone twoToneColor='#eb2f96' key='heart' onClick={onToggleLike} />
-) : (
-  <HeartOutlined key='heart' onClick={onToggleLike} />
-);
+liked ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} /> : <HeartOutlined key="heart" onClick={onToggleLike} />;
 ```
 
 - 삼항 연산자를 통해 useState의 liked를 기반으로 onToggle 함수를 실행할 수 있다.
