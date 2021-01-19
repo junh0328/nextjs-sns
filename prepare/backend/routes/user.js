@@ -1,14 +1,14 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-
-const { User, Post } = require('../models');
+const { Op } = require('sequelize');
+const { User, Post, Image, Comment } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewars');
 
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
-  console.log(req.headers);
+  // console.log(req.headers);
   //GET /user
   try {
     if (req.user) {
@@ -79,6 +79,69 @@ router.get('/:userId', async (req, res, next) => {
     } else {
       res.status(404).json('존재하지 않는 사용자입니다.');
     }
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+// (userId)를 통해 특정 사용자의 게시글만 가져오기
+router.get('/:userId/posts', async (req, res, next) => {
+  // GET /user/1/posts
+  try {
+    const where = { UserId: req.params.userId };
+    if (parseInt(req.query.lastId, 10)) {
+      // 초기 로딩이 아닐 때 > 스크롤을 내려서 더 posts들을 불러올 때
+      where.id = {
+        [Op.lt]: parseInt(req.query.lastId, 10), // id가 lastId 보다 작은 게시물 10개를 불러와라
+      };
+    } // 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+    const posts = await Post.findAll({
+      where,
+      limit: 10,
+      order: [
+        ['createdAt', 'DESC'], // 처음에 게시글의 생성일을 기준으로 내림차순 정렬
+        [Comment, 'createdAt', 'DESC'], // 그 안에 들어있는 댓글들을 생성일 기준으로 내림차순 정렬
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
+        {
+          model: Image,
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User, //댓글의 작성자
+              attributes: ['id', 'nickname'],
+            },
+          ],
+        },
+        {
+          model: User, // 좋아요 누른 사람
+          as: 'Likers',
+          attributes: ['id'],
+        },
+        {
+          model: Post,
+          as: 'Retweet',
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+            },
+            {
+              model: Image,
+            },
+          ],
+        },
+      ],
+    }); // 지금까지 작성한 모든 게시글을 보여줄 것.
+    // console.log(posts);
+    res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     return next(error);

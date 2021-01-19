@@ -59,6 +59,14 @@ export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 
+export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST';
+export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS';
+export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE';
+
+export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
+export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
+export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
+
 export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
 export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
@@ -169,13 +177,15 @@ const reducer = (state = initialState, action) =>
         draft.unlikePostLoading = false;
         draft.unlikePostError = action.error;
         break;
-
+      case LOAD_USER_POSTS_REQUEST:
+      case LOAD_HASHTAG_POSTS_REQUEST:
       case LOAD_POSTS_REQUEST:
         draft.loadPostsLoading = true;
         draft.loadPostsDone = false;
         draft.loadPostsError = null;
         break;
-
+      case LOAD_USER_POSTS_SUCCESS:
+      case LOAD_HASHTAG_POSTS_SUCCESS:
       case LOAD_POSTS_SUCCESS: {
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
@@ -186,6 +196,8 @@ const reducer = (state = initialState, action) =>
         // 작성된 게시글이 10개일 경우, hasMorePost가 true인 상태에서 한 번 더 불러와야 hasMorePosts 가 false가 된다.
         break;
       }
+      case LOAD_USER_POSTS_FAILURE:
+      case LOAD_HASHTAG_POSTS_FAILURE:
       case LOAD_POSTS_FAILURE:
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
@@ -231,9 +243,7 @@ const reducer = (state = initialState, action) =>
       case REMOVE_POST_SUCCESS: {
         draft.removePostLoading = false;
         draft.removePostDone = true;
-        draft.mainPosts = draft.mainPosts.filter(
-          (v) => v.id !== action.data.PostId
-        );
+        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.PostId);
         break;
       }
       case REMOVE_POST_FAILURE:
@@ -261,3 +271,9 @@ const reducer = (state = initialState, action) =>
     }
   });
 export default reducer;
+
+/*
+intialState 공유하기
+조건 - 한 페이지에서 해당 액션이 같이 사용되지 않을 때는 initialState를 공유해서 사용할 수 있다.
+액션은 만들어 줘야한다.
+*/
