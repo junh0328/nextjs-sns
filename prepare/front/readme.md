@@ -566,6 +566,53 @@ localhost:3000/port/1 과 같은 형식으로 접근할 수 있습니다.
 - 우리가 profile 페이지와 같이 사용자의 정보를 불러오는 페이지를 만들 때, 수많은 REQUEST, SUCCESS, FAILURE 요청을 보내게 됩니다.
 - 이를 간단하게 줄이기 위해 swr 라이브러리를 사용해봅시다.
 
+## 6.3 moment 라이브러리로 postCard에 시간 적어주기
+
+- moment는 npm에서 제공하는 날짜 라이브러리입니다.
+- npm trends에서 가장 핫한 날짜 제공 관련 라이브러리를 찾아볼 수 있습니다.
+- npm i moment/ yarn add moment로 추가합니다.
+
+- 기존 Date 내장 객체를 사용하여 현재 날짜를 보여주기 위해서는 다음과 같은 형식을 넣어줘야 합니다.
+
+```js
+new Date().getFullYear() + new Date().getMonth() + new Date().getDate();
+```
+
+- 하지만 모멘트 라이브러리를 통해 간단한 코드 작성으로 db와 연결된 현재 시간을 가져올 수 있습니다.
+
+```js
+moment.locale('ko'); >> 한국어를 사용하겠다는 locale 속성입니다.
+...
+<div>{moment(post.createdAt)}</div>
+```
+
+- moment(post.createdAt) : moment 함수에 post.createdAt이라는 시퀄라이즈에서 기본 제공하는 속성을 넣어주면 그 게시물이 언제 작성됐는지 나타낼 수 있습니다.
+
+- 더 자세한 내용은 momentjs.com 을 통해 확인하실 수 있습니다.
+
+## 6.4 next로 개발된 어플리케이션 build하기
+
+- 현재 우리는 개발을 위해서 redux-devtools 등을 사용하여 오류를 잡고, 히스토리를 분석했습니다.
+- 또한 넥스트에서는 우리가 만든 파일들을 렌더링하는 데 상당한 시간이 소요됩니다.
+- 따라서 우리가 리액트, 넥스트를 통해 만든 어플리케이션을 빌드하는 과정을 통해 html/css/js로 변환시켜 파일의 용량을 줄인 상태로 배포하게 됩니다.
+- 빌드 과정을 통해서 렌더링 시간과 다른 컴포넌트에 접근하는 시간을 효율적으로 단축할 수 있습니다.
+- next run build 를 통해 build를 합니다.
+- 🌟First Load JS🌟를 통해 우리의 파일들이 build 과정을 거쳐 만들어진 사이즈가 나옵니다.
+- 이 사이즈가 각 파일당 1MB가 넘을 경우 모바일로 볼 때 렉이 걸릴 수 있습니다.
+- 그럴 때는 react.js의 코드 splitting 기술을 적용하여 1MB가 넘는 파일들을 조금 더 잘게 쪼겨주는 것이 좋습니다.
+
+## 6.5 build 시 생기는 파일 분석하기
+
+- npm run build를 통해 우리가 만들 어플리케이션을 빌드하면 이름 모를 파일들이 생길 수 있습니다.
+
+```
+ chunks/033f869c0cc364627d93bd7d05534baade1e7634.5aecd0.js
+ chunks/1f306b9fddb00673b504f4b6a01c6ad8f303d4d5.3d3734.js
+```
+
+- 위와 같은 파일들을 분석하기 위해 bundle-analyzer를 사용합니다.
+- npm i @next/bundle-analyzer
+
 ## 🌟 개발 꿀팁(ui)
 
 - 그리드를 만들 때는 가로(Row) 먼저 나누고 세로(Col)로 나눌 것

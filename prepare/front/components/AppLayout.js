@@ -56,11 +56,6 @@ const AppLayout = ({ children }) => {
         <Menu.Item>
           <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />
         </Menu.Item>
-        <Menu.Item>
-          <Link href="/signup">
-            <a>회원가입</a>
-          </Link>
-        </Menu.Item>
       </Menu>
       <Row gutter={8}>
         {/* gutter: 컬럼 사이의 간격 */}

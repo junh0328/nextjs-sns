@@ -4,17 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next"
+    "dev": "next",
+    "build": "next build"
   },
   "author": "Junhee Lee",
   "license": "ISC",
   "dependencies": {
+    "@adonisjs/ace": "^8.0.0",
     "@ant-design/icons": "^4.3.0",
+    "@next/bundle-analyzer": "^10.0.5",
     "antd": "^4.9.4",
     "axios": "^0.21.1",
     "babel-plugin-styled-components": "^1.12.0",
+    "cross-env": "^7.0.3",
     "faker": "^5.1.0",
     "immer": "^8.0.0",
+    "moment": "^2.29.1",
     "next": "^10.0.4",
     "next-redux-wrapper": "^6.0.2",
     "prop-types": "^15.7.2",
