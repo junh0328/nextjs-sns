@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'nodebird.com'], //또는 origin: true,
+    origin: ['http://localhost:3000', 'nodebird.com', 'http://13.209.14.27'], //또는 origin: true,
     credentials: true,
   })
 );
