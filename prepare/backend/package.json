@@ -4,7 +4,8 @@
   "description": "# 1. 노드로 서버 구동하기",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "start": "node app"
   },
   "author": "Junhee Lee",
   "license": "ISC",
