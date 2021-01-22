@@ -16,7 +16,7 @@ const hashtagRouter = require('./routes/hashtag');
 
 const db = require('./models');
 const passportConfig = require('./passport');
-const port = 3065;
+const port = 80;
 
 dotenv.config(); //.env를 사용할 수 있게 해주는 명령어
 const app = express();
