@@ -16,7 +16,7 @@ const hashtagRouter = require('./routes/hashtag');
 
 const db = require('./models');
 const passportConfig = require('./passport');
-const port = 80;
+const port = 3065;
 
 dotenv.config(); //.env를 사용할 수 있게 해주는 명령어
 const app = express();
@@ -39,16 +39,21 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
+  app.use(
+    cors({
+      origin: 'http://nodebird.com',
+      credentials: true,
+    })
+  );
 } else {
   app.use(morgan('dev'));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    })
+  );
 }
-
-app.use(
-  cors({
-    origin: ['http://localhost:3060', 'nodebird.com', 'http://3.36.78.27'], //또는 origin: true,
-    credentials: true,
-  })
-);
 
 app.use('/', express.static(path.join(__dirname, 'uploads')));
 // static(path.join(...))을 사용하여 현재 폴더 + uploads 폴더에 접근할 수 있도록 허용
