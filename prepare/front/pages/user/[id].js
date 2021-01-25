@@ -17,7 +17,7 @@ const User = () => {
   const router = useRouter();
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo, me } = useSelector((state) => state.user);
 
   useEffect(() => {
     const onScroll = () => {
@@ -52,8 +52,10 @@ const User = () => {
           <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
         </Head>
       )}
-      {userInfo ? (
+      {/* 유저 안포가 내가 아닌 경우에만 클릭 시 타인의 정보(트윗, 팔로잉, 팔로워) 정보 뜨게 바꿈 */}
+      {userInfo && userInfo.id !== me?.id ? (
         <Card
+          style={{ marginBottom: 20 }}
           actions={[
             <div key="twit">
               짹짹

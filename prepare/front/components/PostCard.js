@@ -1,9 +1,8 @@
-import { Avatar, Button, Card, Comment, List, Popover } from 'antd';
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { HeartOutlined, MessageOutlined, RetweetOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
+import { Avatar, Button, Card, Comment, List, Popover } from 'antd';
+import { HeartOutlined, MessageOutlined, RetweetOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
 import Link from 'next/link';
 import moment from 'moment';
 
@@ -11,17 +10,43 @@ import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
+import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, UPDATE_POST_REQUEST } from '../reducers/post';
 
 moment.locale('ko');
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const { removePostLoading } = useSelector((state) => state.post);
+  const [commentFormOpened, setCommentFormOpened] = useState(false); // onLike 토글 기능을 통해 true <-> false를 이용하는 함수
   const id = useSelector((state) => state.user.me?.id);
   const liked = post.Likers.find((v) => v.id === id); // 게시글 좋아요 누른 사람중에 내가 있는지?
+  const [editMode, setEditMode] = useState(false);
 
-  const [commentFormOpened, setCommentFormOpened] = useState(false);
-  // onLike 토글 기능을 통해 true <-> false를 이용하는 함수
+  const onClickUpdate = useCallback(() => {
+    console.log('수정 버튼 클릭!');
+    setEditMode(true);
+  }, []);
+
+  const onCancelUpdate = useCallback(() => {
+    console.log('취소 버튼 클릭!');
+    setEditMode(false);
+  }, []);
+
+  // 고차함수로 받는 이유는 하위 컴포넌트 PostCardContent에 editText를 넣어주기 위함이다.
+  // PostCardContent에서 onChangePost를 만들지 않은 이유는 REQUEST 액션을 통해 데이터를 넘겨줄 때, PostCardContent에서 dispatch 시킨다면 데이터도 props로 넘겨줘야 하기 때문이다.
+  const onChangePost = useCallback(
+    (editText) => () => {
+      dispatch({
+        type: UPDATE_POST_REQUEST,
+        data: {
+          PostId: post.id,
+          content: editText,
+        },
+      });
+    },
+    [post],
+    console.log(post)
+  );
 
   const onLike = useCallback(() => {
     if (!id) {
@@ -74,7 +99,6 @@ const PostCard = ({ post }) => {
         actions={[
           <RetweetOutlined key="retweet" onClick={onRetweet} />,
           liked ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} /> : <HeartOutlined key="heart" onClick={onLike} />,
-
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
             key="more"
@@ -82,7 +106,7 @@ const PostCard = ({ post }) => {
               <Button.Group>
                 {id && post.User.id === id ? (
                   <>
-                    <Button>수정</Button>
+                    {!post.RetweetId && <Button onClick={onClickUpdate}>수정</Button>}
                     <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>
                       삭제
                     </Button>
@@ -114,7 +138,7 @@ const PostCard = ({ post }) => {
                 </Link>
               }
               title={post.Retweet.User.nickname}
-              description={<PostCardContent postData={post.Retweet.content} />}
+              description={<PostCardContent postData={post.Retweet.content} onCancelUpdate={onCancelUpdate} onChangePost={onChangePost} />}
             />
           </Card>
         ) : (
@@ -129,8 +153,11 @@ const PostCard = ({ post }) => {
                 </Link>
               }
               title={post.User.nickname}
-              description={<PostCardContent postData={post.content} />}
+              description={
+                <PostCardContent editMode={editMode} onCancelUpdate={onCancelUpdate} onChangePost={onChangePost} postData={post.content} />
+              }
             />
+            {/* editMode는 true이면 textarea를 보여주고 false면 기존 게시글을 보여줍니다. */}
           </>
         )}
       </Card>

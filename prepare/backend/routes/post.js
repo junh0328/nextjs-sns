@@ -40,6 +40,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
+      // 모델에 들어있는 UserId <-> userId가 아님..
     });
     //  이미지가 있을 때
     if (hashtags) {
@@ -104,6 +105,13 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
   res.json(req.files.map((v) => v.filename));
 });
 
+/* 
+여기서 파라미터로 받는 /:postId 는 models에서 belongsTo 관계에서 생기는 PostId가 아닌,
+프론트에서 json 형식의 data { postId: post.id }의 postId이므로 헷갈리면 안된다.
+시퀄라이즈에 의해 생성된 Id는 단어 앞이 대문자임을 명심 ㅎㅎ
+
+postId는 컴포넌트 <CommentForm/> 에서 ADD_COMMENT_REQUEST의 {data : .... } 데이터이다.
+*/
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
   // POST /post/1/comment
   try {
@@ -163,6 +171,40 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
   } catch (error) {
     console.error(error);
     return next(error);
+  }
+});
+
+//PATCH 게시물 수정
+router.patch('/:postId', isLoggedIn, async (req, res, next) => {
+  // PATCH /post/10
+  const hashtags = req.body.content.match(/#[^\s#]+/g);
+  try {
+    await Post.update(
+      {
+        content: req.body.content,
+      },
+      {
+        where: {
+          id: req.params.postId,
+          UserId: req.user.id,
+        },
+      }
+    );
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map((tag) =>
+          Hashtag.findOrCreate({
+            where: { name: tag.slice(1).toLowerCase() },
+          })
+        )
+      ); // [[노드, true], [리액트, true]]
+      await post.setHashtags(result.map((v) => v[0]));
+    }
+    res.status(200).json({ PostId: parseInt(req.params.postId, 10), content: req.body.content });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 
