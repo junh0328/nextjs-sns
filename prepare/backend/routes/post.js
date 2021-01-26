@@ -112,8 +112,12 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 
 postId는 컴포넌트 <CommentForm/> 에서 ADD_COMMENT_REQUEST의 {data : .... } 데이터이다.
 */
+
+// 특정 게시글에 댓글달기
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
   // POST /post/1/comment
+  console.log('req.params는 ?');
+  console.log(req.params);
   try {
     const post = await Post.findOne({
       where: { id: req.params.postId },
@@ -141,7 +145,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
     return next(error);
   }
 });
-
+// 게시글 좋아요
 router.patch('/:postId/like', isLoggedIn, async (req, res, next) => {
   // PATCH /post/1/like  >> ${data} = post.id
   try {
@@ -157,7 +161,7 @@ router.patch('/:postId/like', isLoggedIn, async (req, res, next) => {
     return next(error);
   }
 });
-
+// 게시글 좋아요 삭제
 router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
   // DELETE /post/1/like
   try {
@@ -174,7 +178,7 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
   }
 });
 
-//PATCH 게시물 수정
+//게시글 수정
 router.patch('/:postId', isLoggedIn, async (req, res, next) => {
   // PATCH /post/10
   const hashtags = req.body.content.match(/#[^\s#]+/g);
@@ -207,7 +211,7 @@ router.patch('/:postId', isLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
-
+// 게시글 삭제
 router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   //DELETE /post/10
   try {
@@ -224,7 +228,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
     return next(error);
   }
 });
-
+// 특정 게시글 가져오기
 router.get('/:postId', async (req, res, next) => {
   try {
     const post = await Post.findOne({
@@ -263,7 +267,7 @@ router.get('/:postId', async (req, res, next) => {
     return next(error);
   }
 });
-
+// 특정 게시글 리트윗하기
 router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
   // POST /post/1/retweet
   try {

@@ -34,6 +34,8 @@ const PostCard = ({ post }) => {
 
   // 고차함수로 받는 이유는 하위 컴포넌트 PostCardContent에 editText를 넣어주기 위함이다.
   // PostCardContent에서 onChangePost를 만들지 않은 이유는 REQUEST 액션을 통해 데이터를 넘겨줄 때, PostCardContent에서 dispatch 시킨다면 데이터도 props로 넘겨줘야 하기 때문이다.
+  // 🌟 onChangePost에서 고차함수를 쓴 이유 ?
+  // 역으로 value값인 editText를 PostCardContent에서 useState를 통해 수정 값(value)를 상위 컴포넌트인 PostCard로 가져와 이 정보(data)를 dispatch 시키기 위해 고차함수를 통해 (editText)를 넣어줬다고 볼 수 있다. 🌟
   const onChangePost = useCallback(
     (editText) => () => {
       dispatch({

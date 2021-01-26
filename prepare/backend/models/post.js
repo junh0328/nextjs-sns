@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      // belongsTo 관계에서 자동적으로 postId가 생긴다 하지만, as: 'Retweet'으로 인하여 Retweet으로 변경됨
+      // belongsTo 관계에서 자동적으로 PostId가 생긴다 하지만, as: 'Retweet'으로 인하여 Retweet으로 변경됨
     },
     {
       charset: 'utf8mb4',
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Post.associate = (db) => {
-    db.Post.belongsTo(db.User); // Post는 User에 속해있다.
+    db.Post.belongsTo(db.User); // Post는 User에 속해있다. belongsTo 관계에 의해 Post는 PostId라는 속성이 자동 생성된다.
     db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' }); //Post들에는 Hashtag들이 많이 있다. <-> hashtag에는 post들이 많이 속한다.
     db.Post.hasMany(db.Comment); // Post에는 여러개의 댓글이 있을 수 있다.
     db.Post.hasMany(db.Image); //  왜 복수인가? hasMany 이므로
