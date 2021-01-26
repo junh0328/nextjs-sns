@@ -70,6 +70,7 @@
    > https://immerjs.github.io/immer/docs/introduction immer
    > https://evan-moon.github.io/2020/01/05/what-is-immutable/ 데이터불변성(immutable)
 5. 고차 함수를 통한 처리 () => () => { ... }
+   > https://velog.io/@jakeseo_me/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EA%B0%9C%EB%B0%9C%EC%9E%90%EB%9D%BC%EB%A9%B4-%EC%95%8C%EC%95%84%EC%95%BC-%ED%95%A0-33%EA%B0%80%EC%A7%80-%EA%B0%9C%EB%85%90-22-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EA%B3%A0%EC%B0%A8-%ED%95%A8%EC%88%98Higher-Order-Function-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0
 6. redux-devtools에서 오류를 찾는 방법
    > https://medium.com/signal9/redux-%EA%B0%9C%EB%B0%9C%EC%9D%84-%EB%8D%94-%ED%8E%B8%ED%95%98%EA%B2%8C-redux-devtools-4e228655ac7d
 7. PropTypes는 왜 하는가? ✔
@@ -106,23 +107,31 @@
   > 팔로워 목록 가져오기
 - router.get('/followings')
   > 팔로잉 목록 가져오기
+- router.get('/:userId)
+  > 특정 사용자 정보 가져오기 (트윗, 팔로잉, 팔로워)
+- router.get('/:userId/posts)
+  > 특정 사용자의 게시글 가져오기
 
 ## 4.2 '/post'
 
 - router.post('/')
   > 게시글 작성
 - router.post('/images')
-  > 이미지 업로드
+  > 게시글 이미지 업로드
 - router.post('/:postId/comment')
-  > 댓글 달기
+  > 게시글에 댓글 달기
 - router.patch('/:postId/like')
-  > 좋아요 누르기
+  > 게시글에 좋아요 누르기
 - router.delete('/:postId/like')
-  > 좋아요 취소하기
+  > 게시글에 좋아요 취소하기
+- router.patch('/:postId)
+  > 게시글 수정하기
 - router.delete('/:postId')
   > 게시글 삭제
 - router.post('/:postId/retweet')
-  > 리트윗하기
+  > 게시글 리트윗하기
+- router.get('/:postId)
+  > 특정 게시글 가져오기
 
 ## 4.3 '/posts'
 
